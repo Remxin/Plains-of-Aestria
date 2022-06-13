@@ -150,11 +150,9 @@ let assasin = {
 const all_cards = () => {
     return new Promise(async (resolve, reject) => {
         const cookie = await JSON.parse(sessionStorage.getItem("UserContext"))
-        console.log(cookie)
         let userFraction
         if (cookie?.userContext) userFraction = await JSON.parse(sessionStorage.getItem("UserContext")).userContext.fraction.name
         else userFraction = await JSON.parse(sessionStorage.getItem("UserContext")).fraction.name
-        console.log('aaaa')
         userFraction = userFraction.toLowerCase()
         userFraction = userFraction.slice(0, -1)
 
