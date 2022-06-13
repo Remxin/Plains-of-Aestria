@@ -226,6 +226,7 @@ export default class Space {
 
                         //animate and move card to the grid
                         chosen_card.object_group.position.y = 5
+                        let num = index 
                         new TWEEN.Tween(chosen_card.mesh.position)
                             .to({
                                 x: grid_placeholder.position.x,
@@ -238,7 +239,12 @@ export default class Space {
                                 chosen_card.set_position(chosen_card.x, chosen_card.y, chosen_card.z)
                             })
                             .onComplete(() => {
-                                this.socket.passCardPlacement(chosen_card.id, { x: chosen_card.x, y: chosen_card.y, z: chosen_card.z })
+                                console.log(chosen_card._id)
+                                //index relative to enemy_client
+                                let grid_index = ((num > 20) ? num - 21 : ((num <=20 && num > 13) ? num - 7 : null))
+
+                                console.log(grid_index, num)
+                                this.socket.passCardPlacement(chosen_card.id, grid_index)
                             })
 
                         console.log(chosen_card.object_group.position, grid_placeholder.position)

@@ -109,7 +109,12 @@ io.on("connection", (socket) => {
 
   // * _-_-_-_-_-_- game playment _-_-_-_-_-_-
   socket.on("card-placement", (data) => {
-    const { cardId, cords, roomId } = data
-    io.to(roomId).emit("do-card-placement", { cardId, cords })
+    const { cardId, cords, roomId, user } = data
+    socket.to(roomId).emit("do-card-placement", { cardId, cords, user })
+  })
+
+  socket.on("pass-turn", (data) => {
+    const { roomId } = data
+    socket.to(roomId).emit("end-turn")
   })
 });
