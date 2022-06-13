@@ -25,7 +25,9 @@ const getAllCards = async (req, res) => {
     // const user = await userHelpers.verifyUser(jwt)
 
     // if (user.err) return res.send([])
-    const cards = await Card.find()
+    const fraction = JSON.parse(req.body).fraction
+    console.log(fraction)
+    const cards = await Card.find({ fraction: fraction })
     // console.log(cards)
     return res.send(cards)
 
