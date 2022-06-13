@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/styles/css/login.css">
+</head>
+<body>
+    <h1 class="login-title">Plains of Aestria</h1>
+    <h2 class="page-title">Register</h2>
+    <form class="login-form" id="register">
+        <input type="text" placeholder="Enter your name" id="name">
+        <input type="email" placeholder="Enter your email" id="email">
+        <input type="password" placeholder="Enter your password" id="password">
+        <button type="submit">Register</button>
+        <a href="/login">Already have an account</a>
+    </form>
+    <script>
+        document.getElementById("register").onsubmit = async (e) => {
+            e.preventDefault()
+            const email = document.getElementById("email").value
+            const name = document.getElementById("name").value
+            const password = document.getElementById("password").value
+            console.log(email, name, password)
+            try {
+                const res = await fetch("/register", {
+                    method: "POST",
+                    credentials: "include",
+                    body: JSON.stringify({email, password, name})
+                })
+                const resData = await res.json()
+                console.log(resData)
+                if (!resData.errors) {
+                    window.location.reload()
+                }
+            } catch (err) {
+                console.log(err)
+            }
+        }
+    </script>
+</body>
+</html>

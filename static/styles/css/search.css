@@ -1,0 +1,97 @@
+* {
+  padding: 0px;
+  margin: 0px;
+  box-sizing: border-box; }
+
+@keyframes moveBgc {
+  0% {
+    background-position-x: left; }
+  50% {
+    background-position-x: right; }
+  100% {
+    background-position-x: left; } }
+
+@keyframes stretchBackground {
+  from {
+    width: 10%;
+    height: 10%; }
+  to {
+    width: 100%;
+    height: 100%; } }
+
+@keyframes showFrom0Opacity {
+  from {
+    display: block;
+    opacity: 0; }
+  to {
+    display: block;
+    opacity: 1; } }
+
+#main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  background: url("/imgs/battleground.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  animation-name: moveBgc;
+  animation-duration: 40s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out; }
+  #main #information-container {
+    width: 80%;
+    height: 80%;
+    background-color: rgba(240, 255, 240, 0.75);
+    border-radius: 5%; }
+    #main #information-container .userContainer {
+      padding-top: 30px;
+      position: relative; }
+      #main #information-container .userContainer h2 {
+        margin-top: 15px;
+        font-size: 36px;
+        background-clip: text;
+        padding-left: 15px;
+        background: -webkit-linear-gradient(#000, #bbb);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent; }
+      #main #information-container .userContainer h4 {
+        margin-top: 15px;
+        font-size: 24px;
+        background-clip: text;
+        padding-left: 15px;
+        background: -webkit-linear-gradient(#000, #f00);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent; }
+      #main #information-container .userContainer img {
+        position: absolute;
+        top: 25px;
+        right: 0;
+        width: 100px;
+        height: 100px;
+        margin-right: 50px; }
+    #main #information-container .loader-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      margin-top: 100px; }
+      #main #information-container .loader-container p {
+        font-weight: bold;
+        font-size: 20px;
+        margin-bottom: 20px; }
+      #main #information-container .loader-container img {
+        width: 60px; }
+    #main #information-container .fight-info {
+      margin-top: 50px;
+      color: purple;
+      font-size: 32px;
+      text-align: center; }
+    #main #information-container .fight-timer {
+      color: purple;
+      font-size: 30px;
+      text-align: center;
+      font-weight: bold; }
