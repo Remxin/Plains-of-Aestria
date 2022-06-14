@@ -18,13 +18,13 @@ export class Search {
 
     estabilishSocket = () => {
         const socket = io.connect("http://localhost:3001");
-        console.log(this.userContext)
-        console.log(this.isPprivateRoom)
+        // console.log(this.userContext)
+        // console.log(this.isPprivateRoom)
         if (!this.isPprivateRoom) {
             socket.emit("find-opponent", { context: this.userContext });
             socket.on("pair-with-opponent", (data) => this.pairWithOpponent(data))
         } else {
-            console.log(this.userContext)
+            // console.log(this.userContext)
             if (!this.userContext.creator) {
                 socket.emit("join-game", this.userContext)
             }
@@ -37,12 +37,12 @@ export class Search {
     }
 
     pairWithOpponent = async (socketData) => {
-        console.log('pair')
-        console.log(socketData)
+        // console.log('pair')
+        // console.log(socketData)
         if (this.isPprivateRoom) {
             if (!socketData?.enemyContext || !socketData?.userContext) return
         }
-        console.log(socketData)
+        // console.log(socketData)
         sessionStorage.setItem("EnemyContext", JSON.stringify(socketData.enemyContext))
         this.loaderContainer.style.display = "none"
         this.informationContainer.innerHTML = ""
@@ -55,7 +55,7 @@ export class Search {
             usersArr = [socketData.userContext, socketData.enemyContext]
         }
         this.usersArr = usersArr
-        console.log(usersArr)
+        // console.log(usersArr)
 
         // _-_-_- set user cookies, to join game (without them it is impossible) _-_-_-
         this.setGameCookies()
@@ -63,7 +63,7 @@ export class Search {
         // ----- render user iformations -----
 
         usersArr.forEach((user) => {
-            console.log(this.userContext)
+            // console.log(this.userContext)
             const name = this.userContext.userName === user.userName ? user.userName + " (You)" : user.userName; sessionStorage.setItem("EnemyContext", JSON.stringify(user))
             this.createUserInformations(name, user.fraction.name)
         })

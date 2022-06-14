@@ -20,7 +20,7 @@ io.on("connection", (socket) => {
     // console.log(randomRooms)
 
     if (randomRooms.length !== 0 && randomRooms[0].userId !== userContext.userId) {
-      console.log("join")
+      // console.log("join")
       const enemyContext = randomRooms[0].userContext
       const emitObj = {
         player1Context: userContext,
@@ -28,11 +28,11 @@ io.on("connection", (socket) => {
       }
 
       socket.join(randomRooms[0].roomId)
-      console.log(randomRooms[0])
+      // console.log(randomRooms[0])
       io.to(randomRooms[0].roomId).emit("pair-with-opponent", { ...emitObj, socketRoom: freeRooms[0].roomId })
       return randomRooms.shift()
     }
-    console.log('create')
+    // console.log('create')
 
     const roomId = Math.random().toString(36).substring(2, 13)
     freeRooms.push({ roomId, userId: userContext.userId, userContext })
@@ -88,7 +88,7 @@ io.on("connection", (socket) => {
   socket.on("join-game", (data) => {
     const privateRooms = freeRooms.filter(room => room?.roomName)
     const foundRoom = privateRooms.find((room) => room.roomId == data.roomId)
-    console.log(foundRoom)
+    // console.log(foundRoom)
     const enemyContext = foundRoom.userContext
     // console.log(data.userContext)
 
