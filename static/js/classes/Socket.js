@@ -41,6 +41,7 @@ export default class Socket {
             let this_card;
             for(let card_data of this.space.board.cards_json){
                 if(card_data.id = card_id){
+                    //console.log()
                     this_card = new this.space.board.Card(card_id, this.space, x, y, z, this.space.board.cards_json, null)
                     this_card.full_initialization(x, y, z)
                     break
