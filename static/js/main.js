@@ -25,6 +25,10 @@ async function init() {
     let fraction = cardData.fraction
     console.log(all_cards)
 
+    //loading-hero-model-------------------
+    let hero_model = new ModelLoader(space, fraction)    
+    //-------------------------------------
+
     let board = new Board(0, 0, 0, window.innerWidth, window.innerHeight, space, Card, all_cards, fraction)
     space.board = board
 

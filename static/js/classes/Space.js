@@ -3,6 +3,7 @@ export default class Space {
         this.scene = new THREE.Scene()
         this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 10000)
         this.renderer = new THREE.WebGLRenderer()
+        this.light_scene()
 
         this.board;
         this.intersects = null;
@@ -34,6 +35,11 @@ export default class Space {
         this.click_handling()
         this.view_swapping()
         this.context_menu_display_card_info()
+    }
+
+    light_scene(){
+        const ambientLight = new THREE.AmbientLight( 0xffffff, 3 );
+        this.scene.add( ambientLight );
     }
 
     //B and T buttons
@@ -75,9 +81,14 @@ export default class Space {
     }
 
     battlefield_view() {
-        this.camera.position.set(0, 1200, 500)
+        this.camera.position.set(0, 700, 1000)
         this.camera.lookAt(this.scene.position)
+
+        //this.camera.position.set(0, 700, 1000)
         this.view = 'battlefield'
+
+        //_this.camera.position.set(0, 300, 700)
+        //_this.camera.lookAt(_this.scene.position)
     }
 
     click_handling() {
