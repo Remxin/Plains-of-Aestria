@@ -308,36 +308,6 @@ export default class Space {
                 console.log('no chosen card', _this.chosen_card)
             }
         })
-
-        // window.addEventListener('mousemove', function(e){            
-        //     let x = e.clientX
-        //     let z = e.clientY
-
-
-        //     if(_this.chosen_card != null){
-        //         _this.chosen_card.update_position()
-
-        //         _this.chosen_card.mesh.position.x = x - window.innerWidth/2
-        //         _this.chosen_card.mesh.position.z = z - window.innerHeight/2
-        //     }
-        // })
-
-        // window.addEventListener('mouseup', function(e){
-        //     console.log(_this.chosen_card)
-
-
-        //     mouseVector.x = (e.clientX/window.innerWidth)*2 - 1
-        //     mouseVector.y = -(e.clientY/window.innerHeight)*2 + 1
-
-        //     raycaster.setFromCamera(mouseVector, _this.camera)
-        //     let drop_intersects = raycaster.intersectObjects(_this.scene.children)
-        //     //placing cards on the grid
-        //     _this.card_placement(_this.chosen_card, drop_intersects)
-
-        //     if(_this.chosen_card) _this.chosen_card.object_group.position.y = 50
-        //     _this.chosen_card = null
-        //     console.log('no chosen card', _this.chosen_card)
-        // })
     }
 
     create_axes() {
