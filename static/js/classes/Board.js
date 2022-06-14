@@ -35,7 +35,8 @@ export default class Board {
         this.init_deck()
 
         //testing purposes only 
-        this.add_one_enemy_card()
+        //this.add_one_enemy_card()
+
         this.add_end_turn_button()
         this.apply_end_turn()
     }
@@ -76,7 +77,7 @@ export default class Board {
                 mesh.rotation.x = (Math.PI / 180) * 270
 
                 let x = -col * window.innerWidth / 7
-                let y = -8
+                let y = -3
                 let z = row * (height + 35) - height * 1.8
                 mesh.position.set(x, y, z)
 
@@ -130,8 +131,8 @@ export default class Board {
     init_deck() {
         //gets players chosen deck ~~somehow~~
         //implementation only for testing
-        for (let i in this.cards_json) {
-            this.deck.push(i)
+        for (let item of this.cards_json) {
+            this.deck.push(item._id)
         }
         this.shuffle_deck()
         this.init_cards_in_deck() //this just sound cooler, and i can do what i want ok ?
@@ -148,7 +149,7 @@ export default class Board {
             let z = 0
             let y = 0
 
-            let card = new this.Card(i, this.space, x, y, z, this.cards_json, false)
+            let card = new this.Card(this.deck[i], this.space, x, y, z, this.cards_json, false)
             card.state = 'deck'
             this.cards_in_order.push(card)
         }
@@ -173,7 +174,13 @@ export default class Board {
         let first_card_id = this.deck[this.deck.length - 1]
         this.deck.pop()
 
-        let drawn_card = this.cards_in_order[first_card_id]
+        let drawn_card;
+        for(let card_data of this.cards_in_order){
+            if(card_data._id == first_card_id){
+                drawn_card = card_data
+            }
+        }
+
         this.cards_in_hand.push(drawn_card)
 
 
@@ -229,7 +236,7 @@ export default class Board {
         let z = tile.position.z
 
         //create card, update cards_on_grid and initialize card
-        let card = new this.Card(3, this.space, x, y, z, this.cards_json, false)
+        let card = new this.Card(this.deck[3], this.space, x, y, z, this.cards_json, false)
         this.cards_on_grid[index] = card
         card.full_initialization(card.x, card.y, card.z)
 
@@ -275,6 +282,7 @@ export default class Board {
 
     apply_end_turn() {
         this.end_turn_button.addEventListener('click', () => {
+            this.space.socket.passTurn()
             this.end_turn()
         })
     }
@@ -329,7 +337,16 @@ export default class Board {
     }
 
     delete_dead_minions() {
+        let index = 0
+        for(let minion of this.cards_on_grid){
+            if(minion != null && minion.hp < 1){
+                this.space.scene.remove(minion.object_group)
+                minion = null
+                this.cards_on_grid[index] = null
+            }
 
+            index += 1
+        }
     }
 
     async minions_attack(index) {

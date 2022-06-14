@@ -3,6 +3,9 @@ export default class Card {
         this.object_group = new THREE.Group() //it contains card, texture and stats
         this.id = id;     //needed for card identification
         this.card; //this is the card data in json got by id
+        
+        //needed to make deep copy
+        this.cards = JSON.parse(JSON.stringify(cards))
 
         //final method will be grabbing stats
         //types, img, ect. from database via ID
@@ -19,6 +22,7 @@ export default class Card {
         this.atk;
         this.fraction;
         this.file_path;
+        this._id; //id used in db
 
         this.space = space
         this.x = x
@@ -80,6 +84,7 @@ export default class Card {
         this.file_path = card.file_path
         this.description = card.description
         this.name = card.name
+        this._id = card._id
     }
 
     update_position() {
@@ -233,8 +238,19 @@ export default class Card {
 
     identify_card_via_id(cards) {
         //console.log(cards)
-        let card_json = cards[this.id]
-        this.card = card_json
+        // let card_json = cards[this.id]
+        // this.card = card_json
+        //console.log(cards)
+        for(let card_data of cards){
+            if(this.card) continue
+            
+            //console.log('card id', card_data._id, this.id)
+            if(card_data._id == this.id){
+                this.card = card_data
+                console.log('blablabla')
+                
+            }
+        }
     }
 }
 
