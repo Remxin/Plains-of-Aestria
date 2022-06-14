@@ -25,13 +25,14 @@ async function init() {
     let all_cards = cardData.cards
     let fraction = cardData.fraction
     console.log(all_cards)
+    console.log(UsersInfo.getUserFraction(), UsersInfo.getEnemyFraction(), 'qwerty')
 
     //loading-hero-model-------------------
-    let hero_model_user = new ModelLoader(space, UsersInfo.getUserFraction())
-    let hero_model_enemy = new ModelLoader(space, UsersInfo.getEnemyFraction())
+    let hero_model_user = new ModelLoader(space, UsersInfo.getUserFraction(), false)
+    let hero_model_enemy = new ModelLoader(space, UsersInfo.getEnemyFraction(), true)
     //-------------------------------------
 
-    let board = new Board(0, 0, 0, window.innerWidth, window.innerHeight, space, Card, all_cards, fraction)
+    let board = new Board(0, 0, 0, window.innerWidth, window.innerHeight, space, Card, all_cards, fraction, hero_model_user, hero_model_enemy)
     space.board = board
 
 

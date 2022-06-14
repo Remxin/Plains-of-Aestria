@@ -1,8 +1,9 @@
 export default class ModelLoader {
-    constructor(space, fraction){
+    constructor(space, fraction, is_enemy){
         this.fraction = fraction
         this.model_path = null;
         this.space = space
+        this.is_enemy = is_enemy
 
         this.identify_model()
         this.load_model()
@@ -43,27 +44,57 @@ export default class ModelLoader {
             // dodanie do sceny
             console.log(_this.space, _this.fraction, 'blablabla', gltf.scene)
             _this.space.scene.add(gltf.scene);
-            
-            let z = window.innerHeight/1.7
-            let x = window.innerWidth/2.2
-            if(_this.fraction == 'demon'){
-                gltf.scene.scale.set(0.2, 0.2, 0.2)
-                gltf.scene.position.set(x,310,z)
-            } 
-            else if(_this.fraction == 'undead'){
-                gltf.scene.position.set(x,0,z)
-                gltf.scene.scale.set(1.4,1.4,1.4)
+
+            if(!_this.is_enemy){
+                _this.place_player_hero(gltf)
             }
-            else if(_this.fraction == 'human'){
-                gltf.scene.position.set(x,0,z+20)
-                gltf.scene.scale.set(1.4, 1.4, 1.4)
+            else {
+                _this.place_enemy_hero(gltf)
             }
-            
-            gltf.scene.rotation.y += (Math.PI/180)*180
+
+            _this.mesh = gltf.scene
 
         }, undefined, function (error) {
             console.error(error);
         });
+    }
+
+    place_player_hero(gltf){
+        let z = window.innerHeight/1.7
+        let x = window.innerWidth/2.2
+
+        if(this.fraction == 'demon'){
+            gltf.scene.scale.set(0.2, 0.2, 0.2)
+            gltf.scene.position.set(x,310,z)
+        } 
+        else if(this.fraction == 'undead'){
+            gltf.scene.position.set(x,0,z)
+            gltf.scene.scale.set(1.2,1.2,1.2)
+        }
+        else if(this.fraction == 'human'){
+            gltf.scene.position.set(x,0,z+20)
+            gltf.scene.scale.set(1.4, 1.4, 1.4)
+        }
+
+        gltf.scene.rotation.y += (Math.PI/180)*180
+    }
+
+    place_enemy_hero(gltf){
+        let z = -window.innerHeight/1.5
+        let x = 0
+
+        if(this.fraction == 'demon'){
+            gltf.scene.scale.set(0.2, 0.2, 0.2)
+            gltf.scene.position.set(x,310,z)
+        } 
+        else if(this.fraction == 'undead'){
+            gltf.scene.position.set(x,0,z)
+            gltf.scene.scale.set(1.2,1.2,1.2)
+        }
+        else if(this.fraction == 'human'){
+            gltf.scene.position.set(x,0,z+20)
+            gltf.scene.scale.set(1.4, 1.4, 1.4)
+        }
     }
 }
 

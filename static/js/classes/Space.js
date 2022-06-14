@@ -47,12 +47,14 @@ export default class Space {
         const _this = this
         window.addEventListener('keydown', function (e) {
             //console.log(e.code)
-            if (_this.board.end_turn_button) _this.board.end_turn_button.style.visibility = 'hidden'
 
             if (e.code == "KeyT" && _this.view == 'tactical') {
                 _this.default_view()
             }
             else if (e.code == "KeyB" && _this.view == 'battlefield') {
+                _this.default_view()
+            }
+            else if (e.code == "KeyH" && _this.view == 'hero'){
                 _this.default_view()
             }
             else if (e.code == "KeyT") {
@@ -61,6 +63,9 @@ export default class Space {
             else if (e.code == "KeyB") {
                 _this.battlefield_view()
             }
+            else if (e.code == "KeyH") {
+                _this.hero_view()
+            }
         })
     }
 
@@ -68,6 +73,8 @@ export default class Space {
         this.camera.position.set(0, 1200, 0)
         this.camera.lookAt(this.scene.position)
         this.view = 'default'
+
+        if (this.board.end_turn_button) this.board.end_turn_button.style.visibility = 'hidden'
     }
 
     tactical_view() {
@@ -87,8 +94,18 @@ export default class Space {
         //this.camera.position.set(0, 700, 1000)
         this.view = 'battlefield'
 
-        //_this.camera.position.set(0, 300, 700)
-        //_this.camera.lookAt(_this.scene.position)
+        if (this.board.end_turn_button) this.board.end_turn_button.style.visibility = 'hidden'
+    }
+
+    hero_view() {
+        let x = window.innerWidth/2.2
+        let z = window.innerHeight/1.7
+
+        this.camera.position.set(x+300, 700, z+400)
+        this.camera.lookAt(this.scene.position)
+
+        //this.camera.position.set(0, 700, 1000)
+        this.view = 'hero'
     }
 
     click_handling() {

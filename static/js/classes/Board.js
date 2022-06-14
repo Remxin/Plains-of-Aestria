@@ -1,5 +1,5 @@
 export default class Board {
-    constructor(x, y, z, width, height, space, Card, all_cards, fraction) {
+    constructor(x, y, z, width, height, space, Card, all_cards, fraction, player_hero, enemy_hero) {
         this.x = x
         this.y = y
         this.z = z
@@ -27,6 +27,9 @@ export default class Board {
         this.cards_in_hand = [] //cards currently held 
         this.cards_in_order = [] //cards by id -- 0 to max
         this.fraction = fraction
+
+        this.player_hero = player_hero
+        this.enemy_hero = enemy_hero
 
         this.turn_count = 0
 
@@ -355,8 +358,10 @@ export default class Board {
         if (current_card == null) return
 
         let attack_index = this.identify_enemy(index)
-        if (attack_index == -1) this.attack_enemy_hero()
-        else await this.attack_minion(current_card, attack_index)
+        console.log(attack_index, 'jdjdjd')
+
+        if (attack_index == -1) await this.attack_enemy_hero(current_card, index)
+        else if(attack_index > 0) await this.attack_minion(current_card, attack_index)
     }
 
     async attack_minion(card, atk_index) {
@@ -369,8 +374,64 @@ export default class Board {
         return await this.attack_animation(card, enemy_card)
     }
 
-    attack_enemy_hero() {
+    attack_enemy_hero(card, index) {
+        let old_x = card.mesh.position.x
+        let old_y = card.mesh.position.y
+        let old_z = card.mesh.position.z
+        
+        let attacked_hero; 
+        if(index < 14) attacked_hero = this.player_hero
+        else attacked_hero = this.enemy_hero
 
+        return new Promise((resolve, reject) => {
+            new TWEEN.Tween(card.mesh.position)
+            .to({
+                x: attacked_hero.mesh.position.x,
+                z: attacked_hero.mesh.position.z,
+                y: 200
+            }, 500)
+            .easing(TWEEN.Easing.Exponential.Out)
+            .start()
+            .onUpdate(() => {
+                card.update_position()
+                card.set_position(card.x, card.y, card.z)
+            })
+            .onComplete(() => {
+                new TWEEN.Tween(card.mesh.position)
+                    .to({
+                        y: 20
+                    }, 200)
+                    .easing(TWEEN.Easing.Bounce.Out)
+                    .start()
+                    .onUpdate(() => {
+                        card.update_position()
+                        card.set_position(card.x, card.y, card.z)
+                    })
+                    .onComplete(() => {
+                        new TWEEN.Tween(card.mesh.position)
+                            .to({
+                                x: old_x,
+                                y: old_y,
+                                z: old_z
+                            }, 500)
+                            .easing(TWEEN.Easing.Exponential.Out)
+                            .start()
+                            .onUpdate(() => {
+                                card.update_position()
+                                card.set_position(card.x, card.y, card.z)
+                            })
+                            .onComplete(() => {
+                                card.create_stat_display()
+                                card.update_position()
+
+                                //add here update of enemy health
+                                card.set_position(card.x, card.y, card.z)
+                                return resolve(card)
+                            })
+                    })
+            })
+        })
+        
     }
 
     attack_animation(card, enemy_card) {
