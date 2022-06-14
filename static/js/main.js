@@ -5,9 +5,10 @@ import cards from './classes/card_examples.js'
 import { resize_handler } from './utilityFunctions.js'
 import Socket from './classes/Socket.js'
 import ModelLoader from './classes/ModelLoader.js'
+import UsersInfo from './classes/UsersInfo.js'
 
 async function init() {
-    // console.log(cards)
+    console.log(UsersInfo.getEnemyFraction())
 
     let socket = new Socket()
     let root = document.getElementById('root')
@@ -26,7 +27,8 @@ async function init() {
     console.log(all_cards)
 
     //loading-hero-model-------------------
-    let hero_model = new ModelLoader(space, fraction)    
+    let hero_model_user = new ModelLoader(space, UsersInfo.getUserFraction())
+    let hero_model_enemy = new ModelLoader(space, UsersInfo.getEnemyFraction())
     //-------------------------------------
 
     let board = new Board(0, 0, 0, window.innerWidth, window.innerHeight, space, Card, all_cards, fraction)
