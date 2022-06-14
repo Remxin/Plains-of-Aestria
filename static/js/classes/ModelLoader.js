@@ -41,7 +41,7 @@ export default class ModelLoader {
 
             });
             // dodanie do sceny
-            console.log(_this.space, _this.fraction, 'blablabla')
+            console.log(_this.space, _this.fraction, 'blablabla', gltf.scene)
             _this.space.scene.add(gltf.scene);
             
             let z = window.innerHeight/1.7
@@ -55,8 +55,8 @@ export default class ModelLoader {
                 gltf.scene.scale.set(1.4,1.4,1.4)
             }
             else if(_this.fraction == 'human'){
-                gltf.scene.position.set(x,0,z)
-                gltf.scene.scale.set(5000, 5000, 5000)
+                gltf.scene.position.set(x,0,z+20)
+                gltf.scene.scale.set(1.4, 1.4, 1.4)
             }
             
             gltf.scene.rotation.y += (Math.PI/180)*180
