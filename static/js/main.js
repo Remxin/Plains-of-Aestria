@@ -4,6 +4,7 @@ import Card from './classes/Card.js'
 import cards from './classes/card_examples.js'
 import { resize_handler } from './utilityFunctions.js'
 import Socket from './classes/Socket.js'
+import ModelLoader from './classes/ModelLoader.js'
 
 async function init() {
     // console.log(cards)
