@@ -18,6 +18,7 @@ async function init() {
 
 
 
+    // console.log(await JSON.parse(sessionStorage.getItem("UserContext")).userContext.fraction.name)
     let all_cards = await cards.all_cards()
     console.log(all_cards)
 

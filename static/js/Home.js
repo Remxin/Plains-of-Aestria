@@ -2,7 +2,7 @@ import { UserContext } from "./UserContext.js";
 
 
 export class Home {
-    
+
     constructor() {
         this.userData;
         this.fractionData;
@@ -14,14 +14,15 @@ export class Home {
         this.insertDiv = document.getElementsByClassName("user-info")[0]
         this.userDiv = document.getElementsByClassName("user")[0]
         this.init()
+        this.deleteSessionData()
     }
 
     init = async () => {
-         // TODO: Dodaj kreciola
+        // TODO: Dodaj kreciola
         if (this.userData) {
             return this.createUserInfo(this.userData)
         }
-       
+
         try {
             const res = await fetch('/user', {
                 method: "POST",
@@ -85,7 +86,7 @@ export class Home {
 
     showFractionMenu = async () => {
         this.insertDiv.style.display = "none"
-        
+
         // creating choose fraction menu
         const main = document.createElement("div")
         main.classList.add("choose-fraction-menu")
@@ -102,19 +103,19 @@ export class Home {
         fractionContainer.classList.add("fraction-container")
         const fractionsData = await this.fetchForFractions()
         // console.log(fractionsData)
-         // --- choosen info ---
-         const infoP = document.createElement("p")
-         infoP.innerText = "You choosed: "
-         infoP.setAttribute("id", "choosen-info")
-         // --- accept button ---
-         const acceptBtn = document.createElement("button")
-         acceptBtn.innerText = "SELECT THIS FRACTION"
-         acceptBtn.setAttribute("disabled", "true")
-         acceptBtn.onclick = () => this.showMainMenu()
-         acceptBtn.classList.add("button")
+        // --- choosen info ---
+        const infoP = document.createElement("p")
+        infoP.innerText = "You choosed: "
+        infoP.setAttribute("id", "choosen-info")
+        // --- accept button ---
+        const acceptBtn = document.createElement("button")
+        acceptBtn.innerText = "SELECT THIS FRACTION"
+        acceptBtn.setAttribute("disabled", "true")
+        acceptBtn.onclick = () => this.showMainMenu()
+        acceptBtn.classList.add("button")
 
 
-         // ------- fractions -------
+        // ------- fractions -------
         fractionsData.data.forEach((fraction) => {
             // --- main container ---
             const container = document.createElement("div")
@@ -172,7 +173,7 @@ export class Home {
             liderContainer.appendChild(liderTitle)
 
             const liderLifes = document.createElement("p")
-            liderLifes.innerText = "Lifes: " +fraction.lider.lifes
+            liderLifes.innerText = "Lifes: " + fraction.lider.lifes
             liderLifes.classList.add("lider-lifes")
             liderContainer.appendChild(liderLifes)
 
@@ -180,12 +181,12 @@ export class Home {
             container.appendChild(infoContainer)
             fractionContainer.appendChild(container)
         })
-       
+
         main.appendChild(fractionContainer)
         main.appendChild(infoP)
         main.appendChild(acceptBtn)
-        
-        
+
+
 
 
 
@@ -205,7 +206,7 @@ export class Home {
         if (this.searchGameMenu) {
             return this.searchGameMenu.style.display = "flex"
         }
-        
+
         // creating choose fraction menu
         const main = document.createElement("div")
         main.classList.add("search-game-menu")
@@ -277,9 +278,9 @@ export class Home {
                     method: "POST"
                 })
                 const resData = await res.json()
-                resolve({data: resData})
+                resolve({ data: resData })
             } catch (err) {
-                reject({err})
+                reject({ err })
             }
         })
     }
@@ -287,7 +288,7 @@ export class Home {
     estabilishSocket = () => {
         const socket = io.connect("http://localhost:3001");
         this.socket = socket
-        socket.emit("join-lobby", {userId: this.userData._id});
+        socket.emit("join-lobby", { userId: this.userData._id });
         this.socketEstabilished = true
     }
 
@@ -316,7 +317,7 @@ export class Home {
         gamePasswordInput.setAttribute("type", "password")
         gamePasswordInput.setAttribute("autocomplete", "off")
         gamePasswordInput.setAttribute("placeholder", "password")
-       
+
         createGameMenu.appendChild(gamePasswordLabel)
         createGameMenu.appendChild(gamePasswordInput)
 
@@ -327,12 +328,12 @@ export class Home {
         createGameButton.onclick = () => this.createGame(gameNameInput.value, gamePasswordInput.value)
 
         // unlblock/block button
-        gamePasswordInput.onchange = () => (gamePasswordInput.value && gameNameInput.value) ? createGameButton.removeAttribute("disabled"): createGameButton.setAttribute("disabled", "true")
-        gameNameInput.onchange = () => (gamePasswordInput.value && gameNameInput.value) ? createGameButton.removeAttribute("disabled"): createGameButton.setAttribute("disabled", "true")
+        gamePasswordInput.onchange = () => (gamePasswordInput.value && gameNameInput.value) ? createGameButton.removeAttribute("disabled") : createGameButton.setAttribute("disabled", "true")
+        gameNameInput.onchange = () => (gamePasswordInput.value && gameNameInput.value) ? createGameButton.removeAttribute("disabled") : createGameButton.setAttribute("disabled", "true")
 
         createGameMenu.appendChild(createGameButton)
         this.createGameMenu = createGameMenu
-        
+
         // back button
         const backButton = document.createElement("button")
         backButton.innerText = "BACK"
@@ -360,7 +361,7 @@ export class Home {
 
         this.socket.emit("create-room", emitObject)
         this.socket.on("room-created", (data) => {
-            sessionStorage.setItem("UserContext", JSON.stringify({...context, roomId: data.roomId, roomName: data.roomName}))
+            sessionStorage.setItem("UserContext", JSON.stringify({ ...context, roomId: data.roomId, roomName: data.roomName }))
             window.location.href = "/search"
         })
 
@@ -420,7 +421,7 @@ export class Home {
                 if (this.selectedPrivateRoom) {
                     this.selectedPrivateRoom.row.style.background = "none"
                 }
-                this.selectedPrivateRoom = {row: tr, roomData}
+                this.selectedPrivateRoom = { row: tr, roomData }
                 this.joinGameButton.removeAttribute("disabled")
                 this.selectedPrivateRoom.row.style.background = "#afb"
             }
@@ -482,7 +483,7 @@ export class Home {
 
     validatePass = () => {
         // console.log(this.roomPassInput.value, this.selectedPrivateRoom.roomData)
-        this.socket.emit("join-room", {...this.selectedPrivateRoom.roomData, roomPass: this.roomPassInput.value})
+        this.socket.emit("join-room", { ...this.selectedPrivateRoom.roomData, roomPass: this.roomPassInput.value })
 
         this.socket.on("user-join-room", (data) => {
             console.log(data)
@@ -493,16 +494,21 @@ export class Home {
                 userEmail: this.userData.email,
                 fraction: this.fractionData
             }
-            
+
             //good password
             const context = {
                 // userContext: data.userContext,
                 userContext,
-                roomName: data.roomName, 
+                roomName: data.roomName,
                 roomId: data.roomId
             }
             sessionStorage.setItem("UserContext", JSON.stringify(context))
             window.location.href = "/search"
         })
+    }
+
+    deleteSessionData = () => {
+        sessionStorage.removeItem("UserContext")
+        sessionStorage.removeItem("EnemyContext")
     }
 }

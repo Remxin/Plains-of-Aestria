@@ -4,12 +4,12 @@ export class Auth {
             try {
                 const res = await fetch("/login", {
                     method: "POST",
-                    body: JSON.stringify({login, password})
+                    body: JSON.stringify({ login, password })
                 })
                 const resData = await res.json()
                 resolve(resData)
             } catch (err) {
-                reject({err})
+                reject({ err })
             }
         })
     }
@@ -19,12 +19,12 @@ export class Auth {
             try {
                 const res = await fetch("/register", {
                     method: "POST",
-                    body: JSON.stringify({login, password, name: nick})
+                    body: JSON.stringify({ login, password, name: nick })
                 })
                 const resData = await res.json()
                 resolve(resData)
             } catch (err) {
-                reject({err})
+                reject({ err })
             }
         })
     }
