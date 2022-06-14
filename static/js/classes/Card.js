@@ -3,7 +3,7 @@ export default class Card {
         this.object_group = new THREE.Group() //it contains card, texture and stats
         this.id = id;     //needed for card identification
         this.card; //this is the card data in json got by id
-        
+
         //needed to make deep copy
         this.cards = JSON.parse(JSON.stringify(cards))
 
@@ -74,7 +74,7 @@ export default class Card {
     }
 
     load_stats(card) {
-        //console.log(card)
+        console.log(card)
 
         this.type = card.type
         this.mana_cost = card.mana_cost
@@ -241,14 +241,15 @@ export default class Card {
         // let card_json = cards[this.id]
         // this.card = card_json
         //console.log(cards)
-        for(let card_data of cards){
-            if(this.card) continue
-            
+        for (let card_data of cards) {
+            if (this.card) continue
+
             //console.log('card id', card_data._id, this.id)
-            if(card_data._id == this.id){
+            if (card_data._id == this.id) {
                 this.card = card_data
                 console.log('blablabla')
-                
+                console.log(this.card)
+
             }
         }
     }

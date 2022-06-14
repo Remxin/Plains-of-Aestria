@@ -32,21 +32,21 @@ export default class Socket {
 
             let grid_tile = this.space.board.grid_display[index]
             let x = grid_tile.position.x
-            let y = grid_tile.position.y+13
+            let y = grid_tile.position.y + 13
             let z = grid_tile.position.z
             console.log(grid_tile)
 
-            
-            
+
+
             let this_card;
-            for(let card_data of this.space.board.cards_json){
-                if(card_data.id = card_id){
+            for (let card_data of this.space.board.cards_json) {
+                if (card_data.id = card_id) {
                     this_card = new this.space.board.Card(card_id, this.space, x, y, z, this.space.board.cards_json, null)
                     this_card.full_initialization(x, y, z)
                     break
                 }
             }
-            
+
             this.space.board.cards_on_grid[index] = this_card
             console.log(data)
         })
@@ -57,7 +57,7 @@ export default class Socket {
 
     passCardPlacement = (cardId, cords) => {
         //console.log(this.space)
-        const data = { cardId, cords, roomId: this.socketRoom, enemy: this.userContext}
+        const data = { cardId, cords, roomId: this.socketRoom, enemy: this.userContext }
         this.socket.emit("card-placement", data)
     }
 

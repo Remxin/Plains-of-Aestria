@@ -19,10 +19,12 @@ async function init() {
 
 
     // console.log(await JSON.parse(sessionStorage.getItem("UserContext")).userContext.fraction.name)
-    let all_cards = await cards.all_cards()
+    const cardData = await cards.all_cards()
+    let all_cards = cardData.cards
+    let fraction = cardData.fraction
     console.log(all_cards)
 
-    let board = new Board(0, 0, 0, window.innerWidth, window.innerHeight, space, Card, all_cards)
+    let board = new Board(0, 0, 0, window.innerWidth, window.innerHeight, space, Card, all_cards, fraction)
     space.board = board
 
 
