@@ -104,7 +104,7 @@ export default class Space {
         this.camera.position.set(x+300, 700, z+400)
         this.camera.lookAt(this.scene.position)
 
-        //this.camera.position.set(0, 700, 1000)
+        if (this.board.end_turn_button) this.board.end_turn_button.style.visibility = 'hidden'
         this.view = 'hero'
     }
 
@@ -247,6 +247,8 @@ export default class Space {
                     if (this.board.cards_on_grid[index] == null) {
                         //update the state of grid and card
                         chosen_card.state = 'board'
+                        let index_of_card_in_hand = this.board.cards_in_hand.indexOf(chosen_card)
+                        this.board.cards_in_hand[index_of_card_in_hand] = null
 
                         //add card to the cards_on_grid array
                         this.board.cards_on_grid[index] = chosen_card// WILL BE USED FOR COMBAT MECHANICS

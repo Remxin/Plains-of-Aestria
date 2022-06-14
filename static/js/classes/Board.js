@@ -30,6 +30,10 @@ export default class Board {
 
         this.player_hero = player_hero
         this.enemy_hero = enemy_hero
+        this.player_hero_hp = 50
+        this.enemy_hero_hp = 50
+        this.player_hp_canvas
+        this.enemy_hp_canvas
 
         this.turn_count = 0
 
@@ -43,6 +47,7 @@ export default class Board {
 
         this.add_end_turn_button()
         this.apply_end_turn()
+        this.display_both_players_hp()
     }
 
     init() {
@@ -63,6 +68,116 @@ export default class Board {
         this.mesh.rotation.x = (Math.PI / 180) * 270
 
         this.space.scene.add(this.mesh)
+    }
+
+    display_both_players_hp(){
+          this.create_hp_canvas('player')
+          this.create_hp_canvas('enemy')
+    }
+
+    update_hero_hp(user){
+        if(!this.player_hp_canvas) return
+        if(!this.enemy_hp_canvas)  return
+        
+        let canvas;
+        if(user == 'player') canvas = this.player_hp_canvas
+        else canvas = this.enemy_hp_canvas
+        
+        let ctx = canvas.getContext('2d')
+        
+        ctx.fillStyle = '#260911'
+        ctx.strokeStyle = '#f5e642'
+        ctx.lineWidth = 5
+
+        ctx.fillRect(0,0, canvas.width, canvas.height)
+        ctx.fillRect(0,0, canvas.width, canvas.height)
+        ctx.moveTo(0,0)
+        ctx.lineTo(0, canvas.width)
+        ctx.lineTo(canvas.height, canvas.width)
+        ctx.lineTo(canvas.height, 0)
+        ctx.lineTo(0,0)
+        ctx.stroke()
+
+        let img = new Image()
+        img.src = '../imgs/hero_hp.png'
+        let offset_x =  (canvas.width-64)/1.5 - 5
+        let offset_y =  (canvas.width-64) - 5
+        ctx.drawImage(img, 0, 0, 64, 64, offset_x, offset_y, canvas.width+16, canvas.height+16)
+
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.lineWidth = 1
+        ctx.font = 30 + "px sans-serif";   // needed after resize
+        ctx.fillStyle = '#ffffff'
+        ctx.strokeStyle = '#000000'
+        
+        if(user == 'player'){
+            ctx.fillText(this.player_hero_hp, canvas.width/2, canvas.height/2)
+            ctx.strokeText(this.player_hero_hp, canvas.width/2, canvas.height/2)
+        }
+        else{
+            ctx.fillText(this.enemy_hero_hp, canvas.width/2, canvas.height/2)
+            ctx.strokeText(this.enemy_hero_hp, canvas.width/2, canvas.height/2)
+        }
+    }
+
+    create_hp_canvas(user){
+        let canvas = document.createElement('canvas')
+        let ctx = canvas.getContext('2d')
+
+        canvas.width = 80
+        canvas.height = 80
+
+        canvas.style.position = 'absolute'
+        canvas.style.zIndex = '10000'
+
+        ctx.fillStyle = '#260911'
+        ctx.strokeStyle = '#f5e642'
+        ctx.lineWidth = 5
+        
+
+        ctx.fillRect(0,0, canvas.width, canvas.height)
+        ctx.moveTo(0,0)
+        ctx.lineTo(0, canvas.width)
+        ctx.lineTo(canvas.height, canvas.width)
+        ctx.lineTo(canvas.height, 0)
+        ctx.lineTo(0,0)
+        ctx.stroke()
+
+        let img = new Image()
+        img.src = '../imgs/hero_hp.png'
+        let offset_x =  (canvas.width-64)/1.5 - 5
+        let offset_y =  (canvas.width-64) - 5
+        ctx.drawImage(img, 0, 0, 64, 64, offset_x, offset_y, canvas.width+16, canvas.height+16)
+
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.lineWidth = 1
+        ctx.font = 30 + "px sans-serif";   // needed after resize
+        ctx.fillStyle = '#ffffff'
+        ctx.strokeStyle = '#000000'
+        
+
+        if(user == 'player'){
+            canvas.style.left = '0px'
+            canvas.style.bottom = '0px'
+
+            ctx.fillText(this.player_hero_hp, canvas.width/2, canvas.height/2)
+            ctx.strokeText(this.player_hero_hp, canvas.width/2, canvas.height/2)
+
+            this.player_hp_canvas = canvas
+        }
+        else{
+            canvas.style.left = '0px'
+            canvas.style.top = '0px'
+
+            ctx.fillText(this.player_hero_hp, canvas.width/2, canvas.height/2)
+            ctx.strokeText(this.enemy_hero_hp, canvas.width/2, canvas.height/2)
+            
+            this.enemy_hp_canvas = canvas
+        }
+
+        document.body.appendChild(canvas)
     }
 
     create_grid() {
@@ -136,7 +251,9 @@ export default class Board {
         //gets players chosen deck ~~somehow~~
         //implementation only for testing
         for (let item of this.cards_json) {
-            this.deck.push(item._id)
+            if(item.fraction == this.fraction){
+                this.deck.push(item._id)
+            }
         }
         this.shuffle_deck()
         this.init_cards_in_deck() //this just sound cooler, and i can do what i want ok ?
@@ -174,6 +291,7 @@ export default class Board {
 
     draw_card(to_draw) {
         if (to_draw == 0) return
+        if (this.deck.length == 0) return
 
         let first_card_id = this.deck[this.deck.length - 1]
         this.deck.pop()
@@ -185,9 +303,25 @@ export default class Board {
             }
         }
 
-        this.cards_in_hand.push(drawn_card)
+        let index = 0;
+        let is_empty_space = false
+        for(let card of this.cards_in_hand){
+            if(card == null){
+                this.cards_in_hand[index] = drawn_card
+                is_empty_space = true
+                break
+            }
+            index += 1
+        }
+
+        let to_new_space = -5 * drawn_card.width + this.cards_in_hand.length * (drawn_card.width + 10)
+        let to_empty_space = -5 * drawn_card.width + index * (drawn_card.width + 10)
+        if(!is_empty_space) this.cards_in_hand.push(drawn_card)
 
 
+        let card_destination_in_hand = ((is_empty_space) ? to_empty_space : to_new_space)
+        console.log(to_new_space, to_empty_space, index, this.cards_in_hand.length, this.cards_in_hand)
+        
         //console.log(first_card_id, drawn_card)
         drawn_card.full_initialization(drawn_card.x, drawn_card.y, drawn_card.z)
         //console.log(drawn_card)
@@ -214,7 +348,7 @@ export default class Board {
                     .onComplete(() => {
                         new TWEEN.Tween(drawn_card.mesh.position)
                             .to({
-                                x: -5 * drawn_card.width + this.cards_in_hand.length * (drawn_card.width + 10),
+                                x: card_destination_in_hand,
                                 z: this.height / 2 + 100
                             }, 1000)
                             .easing(TWEEN.Easing.Cubic.Out)
@@ -295,6 +429,7 @@ export default class Board {
         this.turn_count += 1
 
         await this.initialize_attack()
+        this.draw_card(1)
     }
 
     async initialize_attack() {
@@ -378,12 +513,22 @@ export default class Board {
         let old_x = card.mesh.position.x
         let old_y = card.mesh.position.y
         let old_z = card.mesh.position.z
-        
-        let attacked_hero; 
-        if(index < 14) attacked_hero = this.player_hero
-        else attacked_hero = this.enemy_hero
 
         return new Promise((resolve, reject) => {
+            let attacked_hero; 
+            let attacked_player;
+            let hero_hp;
+            if(index < 14){
+                attacked_hero = this.player_hero
+                attacked_player = 'player'
+                hero_hp = this.player_hero_hp
+            }
+            else{
+                attacked_hero = this.enemy_hero
+                attacked_player = 'enemy'
+                hero_hp = this.enemy_hero_hp
+            }
+
             new TWEEN.Tween(card.mesh.position)
             .to({
                 x: attacked_hero.mesh.position.x,
@@ -423,9 +568,18 @@ export default class Board {
                             .onComplete(() => {
                                 card.create_stat_display()
                                 card.update_position()
+                                card.set_position(card.x, card.y, card.z)
 
                                 //add here update of enemy health
-                                card.set_position(card.x, card.y, card.z)
+                                if(index < 14){
+                                    this.player_hero_hp -= card.atk
+                                }
+                                else{
+                                    this.enemy_hero_hp -= card.atk
+                                }
+
+                                //console.log(hero_hp, this.player_hero_hp, this.enemy_hero_hp)
+                                this.update_hero_hp(attacked_player)
                                 return resolve(card)
                             })
                     })
@@ -489,4 +643,6 @@ export default class Board {
         })
 
     }
+
+
 }
