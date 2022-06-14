@@ -37,7 +37,11 @@ export class Search {
     }
 
     pairWithOpponent = async (socketData) => {
-        if (!socketData?.enemyContext || !socketData?.userContext) return
+        console.log('pair')
+        console.log(socketData)
+        if (this.isPprivateRoom) {
+            if (!socketData?.enemyContext || !socketData?.userContext) return
+        }
         console.log(socketData)
         sessionStorage.setItem("EnemyContext", JSON.stringify(socketData.enemyContext))
         this.loaderContainer.style.display = "none"
@@ -60,7 +64,7 @@ export class Search {
 
         usersArr.forEach((user) => {
             console.log(this.userContext)
-            const name = this.userContext.userName === user.userName ? user.userName + " (You)" : user.userName
+            const name = this.userContext.userName === user.userName ? user.userName + " (You)" : user.userName; sessionStorage.setItem("EnemyContext", JSON.stringify(user))
             this.createUserInformations(name, user.fraction.name)
         })
 

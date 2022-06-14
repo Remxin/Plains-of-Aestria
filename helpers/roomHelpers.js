@@ -2,9 +2,9 @@ const bcrypt = require("bcrypt")
 class RoomHelpers {
     static hashRoomPassword = (password) => {
         return new Promise(async (resolve, reject) => {
-            console.log(password)
+            // console.log(password)
             const cryptedPass = await bcrypt.hash(password, 12)
-            console.log(cryptedPass)
+            // console.log(cryptedPass)
             resolve(cryptedPass)
         })
     }
