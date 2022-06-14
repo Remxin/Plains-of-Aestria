@@ -1,5 +1,5 @@
 export default class Board {
-    constructor(x, y, z, width, height, space, Card, all_cards) {
+    constructor(x, y, z, width, height, space, Card, all_cards, fraction) {
         this.x = x
         this.y = y
         this.z = z
@@ -26,6 +26,7 @@ export default class Board {
         this.cards = [] //group objects with card and it's stats
         this.cards_in_hand = [] //cards currently held 
         this.cards_in_order = [] //cards by id -- 0 to max
+        this.fraction = fraction
 
         this.turn_count = 0
 
@@ -175,8 +176,8 @@ export default class Board {
         this.deck.pop()
 
         let drawn_card;
-        for(let card_data of this.cards_in_order){
-            if(card_data._id == first_card_id){
+        for (let card_data of this.cards_in_order) {
+            if (card_data._id == first_card_id) {
                 drawn_card = card_data
             }
         }
@@ -338,8 +339,8 @@ export default class Board {
 
     delete_dead_minions() {
         let index = 0
-        for(let minion of this.cards_on_grid){
-            if(minion != null && minion.hp < 1){
+        for (let minion of this.cards_on_grid) {
+            if (minion != null && minion.hp < 1) {
                 this.space.scene.remove(minion.object_group)
                 minion = null
                 this.cards_on_grid[index] = null
