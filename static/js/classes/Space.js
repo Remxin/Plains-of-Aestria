@@ -81,7 +81,7 @@ export default class Space {
         this.camera.position.set(0, 1500, 200)
         this.camera.lookAt(this.scene.position)
 
-        this.camera.position.set(0, 1500, 350)
+        this.camera.position.set(-50, 1600, 350)
         this.view = 'tactical'
 
         this.board.end_turn_button.style.visibility = 'visible'
@@ -245,6 +245,12 @@ export default class Space {
             for (let grid_placeholder of this.player_grid) {
                 if (intersects[0].object.position.x == grid_placeholder.position.x && intersects[0].object.position.z == grid_placeholder.position.z) {
                     if (this.board.cards_on_grid[index] == null) {
+                        if (this.board.mana_available - chosen_card.mana_cost < 0){
+                            alert('not enough mana!')
+                            return
+                        }
+
+
                         //update the state of grid and card
                         chosen_card.state = 'board'
                         let index_of_card_in_hand = this.board.cards_in_hand.indexOf(chosen_card)
@@ -272,8 +278,12 @@ export default class Space {
                                 console.log(chosen_card._id)
                                 //index relative to enemy_client
                                 let grid_index = ((num > 20) ? num - 21 : ((num <=20 && num > 13) ? num - 7 : null))
-
                                 console.log(grid_index, num)
+
+                                //update mana_available for player
+                                this.board.mana_available -= chosen_card.mana_cost
+                                this.board.update_mana()
+
                                 this.socket.passCardPlacement(chosen_card.id, grid_index)
                             })
 

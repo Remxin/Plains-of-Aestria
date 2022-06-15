@@ -35,7 +35,10 @@ export default class Board {
         this.player_hp_canvas
         this.enemy_hp_canvas
 
-        this.turn_count = 0
+        this.turn_count = 1
+        this.mana_available = 1
+        this.max_mana = 1
+        this.mana_canvas
 
         this.init()
         this.create_grid()
@@ -47,7 +50,7 @@ export default class Board {
 
         this.add_end_turn_button()
         this.apply_end_turn()
-        this.display_both_players_hp()
+        this.display_both_players_hp_and_player_mana()
     }
 
     init() {
@@ -70,9 +73,10 @@ export default class Board {
         this.space.scene.add(this.mesh)
     }
 
-    display_both_players_hp(){
+    display_both_players_hp_and_player_mana(){
           this.create_hp_canvas('player')
           this.create_hp_canvas('enemy')
+          this.create_mana_canvas()
     }
 
     update_hero_hp(user){
@@ -178,6 +182,90 @@ export default class Board {
         }
 
         document.body.appendChild(canvas)
+    }
+
+    create_mana_canvas(){
+        let canvas = document.createElement('canvas')
+        let ctx = canvas.getContext('2d')
+
+        canvas.width = 80
+        canvas.height = 80
+
+        canvas.style.position = 'absolute'
+        canvas.style.zIndex = '10000'
+
+        ctx.fillStyle = '#260911'
+        ctx.strokeStyle = '#f5e642'
+        ctx.lineWidth = 5
+        
+
+        ctx.fillRect(0,0, canvas.width, canvas.height)
+        ctx.moveTo(0,0)
+        ctx.lineTo(0, canvas.width)
+        ctx.lineTo(canvas.height, canvas.width)
+        ctx.lineTo(canvas.height, 0)
+        ctx.lineTo(0,0)
+        ctx.stroke()
+
+        let img = new Image()
+        img.src = '../imgs/current_mana_icon.png'
+        ctx.drawImage(img, 0, 0, 64, 64, 4, 4, canvas.width-8, canvas.height-8)
+
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.lineWidth = 1.2
+        ctx.font = 30 + "px sans-serif"
+        ctx.fillStyle = '#ffffff'
+        ctx.strokeStyle = '#000000'
+        
+
+        canvas.style.left = '0px'
+        canvas.style.bottom = '80px'
+
+        ctx.fillText(`${this.mana_available}/${this.max_mana}`, canvas.width/2, canvas.height/2)
+        ctx.font = 30 + "px sans-serif"
+        ctx.strokeText(`${this.mana_available}/${this.max_mana}`, canvas.width/2, canvas.height/2)
+
+        this.mana_canvas = canvas
+
+        document.body.appendChild(canvas)
+    }
+
+    update_mana(){
+        let canvas = this.mana_canvas
+        let ctx = canvas.getContext('2d')
+
+        ctx.fillStyle = '#260911'
+        ctx.strokeStyle = '#f5e642'
+        ctx.lineWidth = 5
+        
+
+        ctx.fillRect(0,0, canvas.width, canvas.height)
+        ctx.moveTo(0,0)
+        ctx.lineTo(0, canvas.width)
+        ctx.lineTo(canvas.height, canvas.width)
+        ctx.lineTo(canvas.height, 0)
+        ctx.lineTo(0,0)
+        ctx.stroke()
+
+        let img = new Image()
+        img.src = '../imgs/current_mana_icon.png'
+        ctx.drawImage(img, 0, 0, 64, 64, 4, 4, canvas.width-8, canvas.height-8)
+
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.lineWidth = 1.2
+        ctx.font = 30 + "px sans-serif"
+        ctx.fillStyle = '#ffffff'
+        ctx.strokeStyle = '#000000'
+        
+
+        canvas.style.left = '0px'
+        canvas.style.bottom = '80px'
+
+        ctx.fillText(`${this.mana_available}/${this.max_mana}`, canvas.width/2, canvas.height/2)
+        ctx.font = 30 + "px sans-serif"
+        ctx.strokeText(`${this.mana_available}/${this.max_mana}`, canvas.width/2, canvas.height/2)
     }
 
     create_grid() {
@@ -430,6 +518,9 @@ export default class Board {
 
         await this.initialize_attack()
         this.draw_card(1)
+        this.max_mana += 1
+        this.mana_available = this.max_mana
+        this.update_mana()
     }
 
     async initialize_attack() {
