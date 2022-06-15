@@ -1,5 +1,6 @@
 import Space from "./Space.js"
 import { SOCKET_PORT } from '../GLOBAL_VARS.js'
+import UsersInfo from "./UsersInfo.js"
 
 export default class Socket {
     constructor() {
@@ -8,8 +9,9 @@ export default class Socket {
         this.contextData = contextData
         this.socketRoom = contextData.roomId
         console.log(this.contextData)
-        this.userContext = contextData.userContext
-        this.enemyContext = JSON.parse(sessionStorage.getItem("EnemyContext"))
+        this.userContext = UsersInfo.userContext
+        console.log(this.userContext)
+        this.enemyContext = UsersInfo.enemyContext
         this.space = null
         this.whoseTurn = null
 
