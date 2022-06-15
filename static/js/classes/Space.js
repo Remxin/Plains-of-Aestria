@@ -160,7 +160,9 @@ export default class Space {
             this.description_display.innerText += `Fraction: ${card.fraction}\n\n`
             this.description_display.innerText += `Mana cost: ${card.mana_cost}\n`
             this.description_display.innerText += `Hp: ${card.hp}\n`
-            this.description_display.innerText += `Atk: ${card.atk}\n\n`
+            this.description_display.innerText += `Atk: ${card.atk}\n`
+            if(card.keywords)this.description_display.innerText += `Keywords: ${card.keywords}\n\n`
+            else this.description_display.innerText += `\n`
             this.description_display.innerText += `${card.description}\n`
         }
 
@@ -245,6 +247,15 @@ export default class Space {
             for (let grid_placeholder of this.player_grid) {
                 if (intersects[0].object.position.x == grid_placeholder.position.x && intersects[0].object.position.z == grid_placeholder.position.z) {
                     if (this.board.cards_on_grid[index] == null) {
+                        if(this.board.starting_player == true && !(this.board.turn_count % 2 == 1)){
+                            alert('wait for your turn!')
+                            return
+                        }
+                        else if(this.board.starting_player == false && !(this.board.turn_count % 2 == 0)){
+                            alert('wait for your turn')
+                            return
+                        }
+
                         if (this.board.mana_available - chosen_card.mana_cost < 0){
                             alert('not enough mana!')
                             return

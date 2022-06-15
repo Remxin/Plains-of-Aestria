@@ -85,6 +85,7 @@ export default class Card {
         this.description = card.description
         this.name = card.name
         this._id = card._id
+        this.keywords = card.keywords
     }
 
     update_position() {

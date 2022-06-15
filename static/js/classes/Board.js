@@ -37,6 +37,8 @@ export default class Board {
 
         this.starting_player = false
         this.turn_count = 1
+        this.player_turn_count = 1
+
         this.mana_available = 1
         this.max_mana = 1
         this.mana_canvas
@@ -45,7 +47,7 @@ export default class Board {
         this.create_grid()
         this.display_deck()
         this.init_deck()
-        this.who_starts()
+        this.starting_player = this.first_turn()
 
         //testing purposes only 
         //this.add_one_enemy_card()
@@ -75,10 +77,30 @@ export default class Board {
         this.space.scene.add(this.mesh)
     }
 
-    who_starts(){
-        if(this.space.socket.whoseTurn == this.space.socket.userContext.userId){
-            alert('cycki')
-        }
+    async first_turn(){
+        await this.who_starts()
+    }
+
+    async who_starts(){
+        new Promise((resolve, reject) => {
+            if(this.space.socket.whoseTurn == null){
+                setTimeout(()=>{
+                    console.log('jdjdjdjdjd')
+                    this.who_starts()
+                }, 200)
+            } 
+            else if(this.space.socket.whoseTurn == this.space.socket.userContext.userId){
+                this.starting_player = true
+                console.log('starting_player', this.starting_player)
+                resolve(true)
+            }
+            else if(this.space.socket.whoseTurn != this.space.socket.userContext.userId){
+                this.starting_player = false
+                console.log('starting_player', this.starting_player)
+                resolve(false)
+            }
+            
+        })         
     }
 
     display_both_players_hp_and_player_mana(){
@@ -516,6 +538,10 @@ export default class Board {
 
     apply_end_turn() {
         this.end_turn_button.addEventListener('click', () => {
+            if(this.starting_player == true && !(this.turn_count % 2 == 1)) return
+            else if(this.starting_player == false && !(this.turn_count % 2 == 0)) return
+            
+            this.max_mana += 1
             this.space.socket.passTurn()
             this.end_turn()
         })
@@ -523,10 +549,16 @@ export default class Board {
 
     async end_turn() {
         this.turn_count += 1
-
+        
         await this.initialize_attack()
-        this.draw_card(1)
-        this.max_mana += 1
+
+        if(this.starting_player == true && (this.turn_count % 2 == 1)){
+            this.draw_card(1)
+        }
+        else if(this.starting_player == false && (this.turn_count % 2 == 0)){
+            this.draw_card(1)
+        }
+
         this.mana_available = this.max_mana
         this.update_mana()
     }
