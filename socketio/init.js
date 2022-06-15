@@ -150,7 +150,7 @@ io.on("connection", (socket) => {
       const playerArr = [foundRoom.userContext, foundRoom.user2Context]
       const randomInt = Math.floor(Math.random() * 1.99)
       let firstPlayer = playerArr[randomInt]
-      foundRoom.firstPlayer = firstPlayer
+      foundRoom.firstPlayer = firstPlayer.userId
     }
 
     firstPlayer = foundRoom.firstPlayer
