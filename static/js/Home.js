@@ -1,4 +1,5 @@
 import { UserContext } from "./UserContext.js";
+import { SOCKET_PORT } from './GLOBAL_VARS.js'
 
 
 export class Home {
@@ -286,7 +287,7 @@ export class Home {
     }
 
     estabilishSocket = () => {
-        const socket = io.connect("http://localhost:3001");
+        const socket = io.connect(SOCKET_PORT);
         this.socket = socket
         socket.emit("join-lobby", { userId: this.userData._id });
         this.socketEstabilished = true

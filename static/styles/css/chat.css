@@ -1,0 +1,37 @@
+.chat-container {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20%;
+  height: 20%;
+  background-color: rgba(255, 255, 255, 0.3);
+  z-index: 1000; }
+  .chat-container .on-of {
+    background-color: black;
+    border: 1px solid white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 60px;
+    height: 60px;
+    transition: all .5s ease-in-out;
+    cursor: pointer; }
+    .chat-container .on-of__burger {
+      width: 50px;
+      height: 6px;
+      background-color: #fff;
+      border-radius: 5px;
+      transition: all .5s ease-in-out; }
+      .chat-container .on-of__burger::before, .chat-container .on-of__burger::after {
+        content: "";
+        display: block;
+        width: 50px;
+        height: 6px;
+        background-color: #fff;
+        border-radius: 5px;
+        transition: all .5s ease-in-out; }
+      .chat-container .on-of__burger::before {
+        transform: translateY(-15px); }
+      .chat-container .on-of__burger::after {
+        transform: translateY(10px); }
