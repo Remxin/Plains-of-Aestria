@@ -64,7 +64,13 @@ export class Search {
 
         usersArr.forEach((user) => {
             // console.log(this.userContext)
-            const name = this.userContext.userName === user.userName ? user.userName + " (You)" : user.userName; sessionStorage.setItem("EnemyContext", JSON.stringify(user))
+            let name;
+            if (this.userContext.userEmail === user.userEmail) {
+                name = user.userName + " (You)"
+            } else {
+                name = user.userName
+                sessionStorage.setItem("EnemyContext", JSON.stringify(user))
+            }
             this.createUserInformations(name, user.fraction.name)
         })
 
