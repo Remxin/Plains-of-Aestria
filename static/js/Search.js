@@ -1,4 +1,5 @@
 import { UserContext } from "./UserContext.js"
+import { SOCKET_PORT } from './GLOBAL_VARS.js'
 
 export class Search {
     constructor() {
@@ -17,7 +18,7 @@ export class Search {
     }
 
     estabilishSocket = () => {
-        const socket = io.connect("http://localhost:3001");
+        const socket = io.connect(SOCKET_PORT);
         // console.log(this.userContext)
         // console.log(this.isPprivateRoom)
         if (!this.isPprivateRoom) {

@@ -1,21 +1,27 @@
 import Space from "./Space.js"
+import { SOCKET_PORT } from '../GLOBAL_VARS.js'
 
 export default class Socket {
     constructor() {
         const contextData = JSON.parse(sessionStorage.getItem("UserContext"))
-        console.log(contextData)
+        // console.log(contextData)
+        this.contextData = contextData
         this.socketRoom = contextData.roomId
+        console.log(this.contextData)
         this.userContext = contextData.userContext
         this.enemyContext = JSON.parse(sessionStorage.getItem("EnemyContext"))
         this.space = null
+        this.whoseTurn = null
 
         this.connectToSocket()
 
     }
 
     connectToSocket = () => {
-        this.socket = io.connect("http://localhost:3001");
+        this.socket = io.connect(SOCKET_PORT);
         this.socket.emit("estabilish-game", { roomId: this.socketRoom })
+        this.socket.emit("choose-first-player", { roomId: this.socketRoom, player: this.contextData?.userId })
+        this.socket.on("first-player", (data) => { this.whoseTurn = data.firstPlayer; console.log(this.whoseTurn) })
         this.socket.on("connected-to-game", (data) => console.log(data))
         this.socket.on("do-card-placement", (data) => {
             //place the card given to the correct position
@@ -46,7 +52,7 @@ export default class Socket {
 
                     new TWEEN.Tween(this_card.mesh.position)
                         .to({
-                            y: y+100
+                            y: y + 100
                         }, 200)
                         .easing(TWEEN.Easing.Exponential.Out)
                         .start()
@@ -57,7 +63,7 @@ export default class Socket {
                         .onComplete(() => {
                             this_card.update_position()
                             this_card.set_position(this_card.x, this_card.y, this_card.z)
-                            
+
                             new TWEEN.Tween(this_card.mesh.position)
                                 .to({
                                     y: y

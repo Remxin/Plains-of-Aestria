@@ -3,7 +3,7 @@ const { Server } = require("socket.io")
 const RoomHelpers = require("../helpers/roomHelpers")
 const SOCKETPORT = process.env.SOCKETPORT || 3001
 
-const { freeRooms, lobbyUsers } = require("./data")
+let { freeRooms, lobbyUsers, gamesInProgress } = require("./data")
 
 const io = new Server(SOCKETPORT, {
   cors: {
@@ -30,7 +30,9 @@ io.on("connection", (socket) => {
       socket.join(randomRooms[0].roomId)
       // console.log(randomRooms[0])
       io.to(randomRooms[0].roomId).emit("pair-with-opponent", { ...emitObj, socketRoom: freeRooms[0].roomId })
-      return randomRooms.shift()
+      gamesInProgress.push({ ...randomRooms[0], user2Context: userContext })
+      freeRooms.shift()
+      return
     }
     // console.log('create')
 
@@ -58,20 +60,18 @@ io.on("connection", (socket) => {
     }
     // console.log(object)
     freeRooms.push(object)
+    console.log(freeRooms)
     socket.join(roomId)
     io.to(roomId).emit("room-created", object)
     io.to("lobby").emit("private-room-added", object)
   })
 
   socket.on("list-private-rooms", () => {
-    // console.log("lisuje")
     const privateRooms = freeRooms.filter(room => room?.roomName)
     io.to("lobby").emit("private-rooms", privateRooms)
   })
 
   socket.on("join-room", async (data) => {
-    // console.log(data)
-    // console.log(io.sockets.adapter.rooms.get("queue" + data.roomId))
     // if user is not in queue yet
     data.userContext.creator = false
     if (!io.sockets.adapter.rooms.get("queue" + data.roomId + data.userId)) {
@@ -86,27 +86,41 @@ io.on("connection", (socket) => {
   })
 
   socket.on("join-game", (data) => {
+    // console.log(freeRooms)
     const privateRooms = freeRooms.filter(room => room?.roomName)
+    // console.log(privateRooms)
     const foundRoom = privateRooms.find((room) => room.roomId == data.roomId)
     // console.log(foundRoom)
     const enemyContext = foundRoom.userContext
     // console.log(data.userContext)
-
     const emitObj = {
       userContext: data.userContext,
       enemyContext,
       roomId: data.roomId,
       roomName: data.roomName,
     }
+    // console.log(data.userContext)
     // console.log(emitObj)
     socket.join(data.roomId)
     io.to(data.roomId).emit("users-joined-search", emitObj)
+
+
+    // dodawanie informacji o userach
+    if (foundRoom.joinedOne) {
+      freeRooms = freeRooms.filter((room) => room.roomId !== data.roomId) // usuwanie
+
+      gamesInProgress.push({ ...emitObj, user2Context: emitObj.enemyContext })
+    } else {
+      foundRoom.joinedOne = true
+    }
+    console.log(gamesInProgress)
   })
 
   socket.on("estabilish-game", (data) => {
     // console.log(data)
     socket.join(data.roomId)
     io.to(data.roomId).emit("connected-to-game", { roomId: data.roomId })
+
   })
 
 
@@ -120,5 +134,27 @@ io.on("connection", (socket) => {
   socket.on("pass-turn", (data) => {
     const { roomId } = data
     socket.to(roomId).emit("end-turn")
+  })
+
+  socket.on("choose-first-player", (data) => {
+    console.log(data)
+    console.log(gamesInProgress)
+    let foundRoom;
+    if (data.roomId) {
+      foundRoom = gamesInProgress.find((game) => game.roomId == data.roomId)
+    } else {
+      foundRoom = gamesInProgress.find((game) => game.userContext.userId == data.player || game.user2Context.userId == data.player)
+    }
+
+    if (!foundRoom?.firstPlayer) {
+      const playerArr = [foundRoom.userContext, foundRoom.user2Context]
+      const randomInt = Math.floor(Math.random() * 1.99)
+      let firstPlayer = playerArr[randomInt]
+      foundRoom.firstPlayer = firstPlayer
+    }
+
+    firstPlayer = foundRoom.firstPlayer
+
+    io.to(data.roomId).emit("first-player", { firstPlayer })
   })
 });
