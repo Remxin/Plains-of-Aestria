@@ -35,6 +35,7 @@ export default class Board {
         this.player_hp_canvas
         this.enemy_hp_canvas
 
+        this.starting_player = false
         this.turn_count = 1
         this.mana_available = 1
         this.max_mana = 1
@@ -44,6 +45,7 @@ export default class Board {
         this.create_grid()
         this.display_deck()
         this.init_deck()
+        this.who_starts()
 
         //testing purposes only 
         //this.add_one_enemy_card()
@@ -71,6 +73,12 @@ export default class Board {
         this.mesh.rotation.x = (Math.PI / 180) * 270
 
         this.space.scene.add(this.mesh)
+    }
+
+    who_starts(){
+        if(this.space.socket.whoseTurn == this.space.socket.userContext.userId){
+            alert('cycki')
+        }
     }
 
     display_both_players_hp_and_player_mana(){

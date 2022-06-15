@@ -84,7 +84,7 @@ export default class Space {
         this.camera.position.set(-50, 1600, 350)
         this.view = 'tactical'
 
-        this.board.end_turn_button.style.visibility = 'visible'
+        if (this.board.end_turn_button) this.board.end_turn_button.style.visibility = 'visible'
     }
 
     battlefield_view() {
