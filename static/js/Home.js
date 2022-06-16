@@ -511,5 +511,6 @@ export class Home {
     deleteSessionData = () => {
         sessionStorage.removeItem("UserContext")
         sessionStorage.removeItem("EnemyContext")
+        sessionStorage.removeItem("isWin")
     }
 }
