@@ -80,6 +80,9 @@ export default class Socket {
                                     this_card.update_position()
                                     this_card.set_position(this_card.x, this_card.y, this_card.z)
                                     this.space.board.cards_on_grid[index] = this_card
+
+                                    this.space.board.invoke_keywords('enraged', index, this_card, null, 'delete')
+                                    
                                 })
 
                         })
@@ -90,6 +93,8 @@ export default class Socket {
 
             this.space.board.cards_on_grid[index] = this_card
             console.log(data)
+
+            
         })
         this.socket.on("end-turn", () => {
             this.space.board.end_turn()

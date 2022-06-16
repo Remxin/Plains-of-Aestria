@@ -295,6 +295,11 @@ export default class Space {
                                 this.board.mana_available -= chosen_card.mana_cost
                                 this.board.update_mana()
 
+                                //enraged and sage keywords
+                                this.board.invoke_keywords('enraged', num, chosen_card)
+                                this.board.invoke_keywords('sage', num, chosen_card)
+                                this.board.invoke_keywords('farm', null, chosen_card)
+
                                 this.socket.passCardPlacement(chosen_card.id, grid_index)
                             })
 

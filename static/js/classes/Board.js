@@ -42,6 +42,7 @@ export default class Board {
         this.mana_available = 1
         this.max_mana = 1
         this.mana_canvas
+        this.additional_mana_gain = 0
 
         this.init()
         this.create_grid()
@@ -85,19 +86,20 @@ export default class Board {
         new Promise((resolve, reject) => {
             if(this.space.socket.whoseTurn == null){
                 setTimeout(()=>{
-                    console.log('jdjdjdjdjd')
                     this.who_starts()
-                }, 200)
+                }, 10)
             } 
             else if(this.space.socket.whoseTurn == this.space.socket.userContext.userId){
                 this.starting_player = true
                 console.log('starting_player', this.starting_player)
                 resolve(true)
+                alert(`Your turn! ${this.starting_player}||${this.turn_count}`)
             }
             else if(this.space.socket.whoseTurn != this.space.socket.userContext.userId){
                 this.starting_player = false
                 console.log('starting_player', this.starting_player)
                 resolve(false)
+                alert(`Enemy turn! ${this.starting_player}||${this.turn_count}`)
             }
             
         })         
@@ -538,12 +540,19 @@ export default class Board {
 
     apply_end_turn() {
         this.end_turn_button.addEventListener('click', () => {
-            if(this.starting_player == true && !(this.turn_count % 2 == 1)) return
-            else if(this.starting_player == false && !(this.turn_count % 2 == 0)) return
+            if(this.starting_player == true && !(this.turn_count % 2 == 1)){
+                alert('Wait for your turn!')
+                return 
+            }
+            else if(this.starting_player == false && !(this.turn_count % 2 == 0)){
+                alert('Wait for your turn!')
+                return
+            } 
             
-            this.max_mana += 1
-            this.space.socket.passTurn()
+            //change that 
+            this.max_mana += 10
             this.end_turn()
+            this.space.socket.passTurn()
         })
     }
 
@@ -560,6 +569,7 @@ export default class Board {
         }
 
         this.mana_available = this.max_mana
+        this.mana_available += this.additional_mana_gain
         this.update_mana()
     }
 
@@ -570,8 +580,22 @@ export default class Board {
         let index = 27
         while (run) {
             console.log(index, this.cards_on_grid[index])
-            await this.minions_attack(index)
 
+            if(this.player_hero_hp < 1){
+                alert('you lost!!!')
+                sessionStorage.setItem('isWin', JSON.stringify(false))
+                window.location.href = '/summary'
+                return 
+            }
+            if(this.enemy_hero_hp < 1){
+                alert('you won!!!')
+                sessionStorage.setItem('isWin', JSON.stringify(true))
+                window.location.href = '/summary'
+                return
+            }
+
+            await this.minions_attack(index)
+            
             if (index == 0) run = false
             index -= 1
         }
@@ -580,10 +604,13 @@ export default class Board {
     }
 
     //-1 INDEX WILL BE HERO || IMPORTANT || IMPORTANT || IMPORTANT || IMPORTANT || IMPORTANT
-    identify_enemy(index) {
+    async identify_enemy(index) {
         let current_card = this.cards_on_grid[index]
         if (current_card == null) return
         //console.log(current_card, '|||||', index)
+
+        let taunt_index = await this.invoke_keywords('taunt', index)
+        if(taunt_index) return taunt_index
 
 
         //identify grid index to attack using ~~magic~~
@@ -610,6 +637,9 @@ export default class Board {
         let index = 0
         for (let minion of this.cards_on_grid) {
             if (minion != null && minion.hp < 1) {
+                if(minion.keywords != null && minion.keywords.includes('farm') && index < 14){
+                    this.additional_mana_gain -= 1
+                }
                 this.space.scene.remove(minion.object_group)
                 minion = null
                 this.cards_on_grid[index] = null
@@ -619,22 +649,36 @@ export default class Board {
         }
     }
 
-    async minions_attack(index) {
+    async minions_attack(index, socket_call) {
         let current_card = this.cards_on_grid[index]
         if (current_card == null) return
 
-        let attack_index = this.identify_enemy(index)
+        let attack_index = await this.identify_enemy(index)
         console.log(attack_index, 'jdjdjd')
+
+        if(current_card.keywords != null && current_card.keywords.includes('wizard')){
+            await this.invoke_keywords('wizard', index, current_card, attack_index)
+        }
+        else if(current_card.keywords != null && current_card.keywords.includes('archmage')){
+            await this.invoke_keywords('archmage', index, current_card, attack_index)
+        }
 
         if (attack_index == -1) await this.attack_enemy_hero(current_card, index)
         else if(attack_index > 0) await this.attack_minion(current_card, attack_index)
+
+        if(socket_call == 'delete') this.delete_dead_minions()
     }
 
     async attack_minion(card, atk_index) {
         let enemy_card = this.cards_on_grid[atk_index]
 
         //calculate new hp values for both cards
+        let executed = await this.invoke_keywords('execute', null, card, enemy_card)
         enemy_card.hp = enemy_card.hp - card.atk
+        if(executed) enemy_card.hp = 0
+
+        //bloodthirst keyword
+        await this.invoke_keywords('bloodthirst', null, card)
         //console.log(enemy_card.hp, card.hp)
 
         return await this.attack_animation(card, enemy_card)
@@ -747,6 +791,7 @@ export default class Board {
                         .easing(TWEEN.Easing.Bounce.Out)
                         .start()
                         .onUpdate(() => {
+                            card.create_stat_display()
                             card.update_position()
                             card.set_position(card.x, card.y, card.z)
                         })
@@ -775,5 +820,173 @@ export default class Board {
 
     }
 
+    async invoke_keywords(keyword, index, current_card, enemy_card, socket_call){
+        //taunt
+        //alters result of identify_enemy()
+        //index value needed here
+        if(keyword == 'taunt'){
+            if(index < 14){
+                for(let i = 14; i < 28; i++){
+                    if(this.cards_on_grid[i] != null && index != i && this.cards_on_grid[i].keywords != null && this.cards_on_grid[i].keywords.includes('taunt')){
+                        let atk_index = i
+                        return atk_index
+                    }
+                }
+            }
+            if(index > 13){
+                for(let i = 0; i < 14; i++){
+                    if(this.cards_on_grid[i] != null && index != i && this.cards_on_grid[i].keywords != null && this.cards_on_grid[i].keywords.includes('taunt')){
+                        let atk_index = i
+                        return atk_index
+                    }
+                }
+            }
+
+            return null
+        }
+        //wizard, deals additional damage to random enemy at the end of turn
+        //implementation in the minions_attack() function before attacking
+
+        //enemy_card here is attack_index
+        else if(keyword == 'wizard' || keyword == 'archmage'){
+            return new Promise((resolve, reject) => {
+                //let possible_spell_attack_indexes = []
+
+                //console.log(possible_spell_attack_indexes, index, current_card, 'possible')
+
+                let old_x = current_card.x
+                let old_y = current_card.y
+                let old_z = current_card.z
+
+                new TWEEN.Tween(current_card.mesh.position)
+                    .to({
+                        x: old_x + Math.round(Math.random()*50 - 25),
+                        y: old_y + Math.round(Math.random()*50 - 25),
+                        z: old_z + Math.round(Math.random()*50 - 25)
+                    }, 150)
+                    .easing(TWEEN.Easing.Exponential.In)
+                    .start()
+                    .onUpdate(() => {
+                        current_card.update_position()
+                        current_card.set_position(current_card.x, current_card.y, current_card.z)
+                        //console.log('poss', 'onUpdate mycard')
+                    })
+                    .onComplete(() => {
+                        new TWEEN.Tween(current_card.mesh.position)
+                            .to({
+                                x: old_x,
+                                y: old_y,
+                                z: old_z
+                            }, 150)
+                            .easing(TWEEN.Easing.Exponential.Out)
+                            .start()
+                            .onUpdate(() => {
+                                current_card.update_position()
+                                current_card.set_position(current_card.x, current_card.y, current_card.z)
+                            })
+                            .onComplete(() => {
+                                current_card.update_position()
+                                current_card.set_position(current_card.x, current_card.y, current_card.z)
+                            })
+                    })
+                    .repeat(5)
+
+                //yeah, truly ``random`` 
+                let attack_index = enemy_card
+                let attacked_card
+                if (attack_index == -1){
+                    if(index > 13) attacked_card = this.enemy_hero  
+                    else attacked_card = this.player_hero
+                }
+                else {
+                    attacked_card = this.cards_on_grid[attack_index]
+                }
+                
+
+                let attacked_y = attacked_card.mesh.position.y
+                new TWEEN.Tween(attacked_card.mesh.position)
+                    .to({
+                        y: attacked_y + 250
+                    },1000)
+                    .easing(TWEEN.Easing.Exponential.Out)
+                    .start()
+                    .onUpdate(() => {
+                        if(attack_index != -1){
+                            attacked_card.update_position()
+                            attacked_card.set_position(attacked_card.x, attacked_card.y, attacked_card.z)
+                        }
+                    })
+                    .onComplete(() => {
+                        new TWEEN.Tween(attacked_card.mesh.position)
+                            .to({
+                                y: attacked_y
+                            },500)
+                            .easing(TWEEN.Easing.Exponential.In)
+                            .start()
+                            .onUpdate(() => {
+                                if(attack_index != -1){
+                                    attacked_card.update_position()
+                                    attacked_card.set_position(attacked_card.x, attacked_card.y, attacked_card.z)
+                                }
+                            })
+                            .onComplete(() => {
+                                let dmg = ((keyword == 'wizard') ? 2 : 4)
+                                
+                                if(attack_index != -1){
+                                    attacked_card.hp -= dmg 
+                                    attacked_card.create_stat_display()
+                                    attacked_card.update_position()
+                                    attacked_card.set_position(attacked_card.x, attacked_card.y, attacked_card.z)
+                                    return resolve(true)
+                                }
+                                else{
+                                    if(index > 13){
+                                        this.enemy_hero_hp -= dmg
+                                        this.update_hero_hp()
+                                    }
+                                    else{
+                                        this.player_hero_hp -= dmg
+                                        this.update_hero_hp()
+                                    }
+
+                                    return resolve(true)
+                                }
+                            })
+                    })
+            })
+        }
+        //if enemy has 5 hp or less he dies instantly
+        else if(keyword == 'execute'){
+            if(current_card.keywords != null && current_card.keywords.includes('execute')){
+                if(enemy_card.hp <= 5) return true
+                return false
+            }
+        }
+        //charges at the enemy instantly in the moment he is placed
+        else if(keyword == 'enraged'){
+            if(current_card.keywords != null && current_card.keywords.includes('enraged')){
+                if(socket_call) this.minions_attack(index, 'delete')
+                else this.minions_attack(index)
+            }
+        }
+        //draws one card
+        else if(keyword == 'sage'){
+            if(current_card.keywords != null && current_card.keywords.includes('sage')){
+                this.draw_card(1)
+            }
+        }
+        //basically life steal
+        else if(keyword == 'bloodthirst'){
+            if(current_card.keywords != null && current_card.keywords.includes('bloodthirst')){
+                current_card.hp += 2
+            }
+        }
+
+        else if(keyword == 'farm'){
+            if(current_card.keywords != null && current_card.keywords.includes('farm')){
+                this.additional_mana_gain += 1
+            }
+        }
+    }
 
 }

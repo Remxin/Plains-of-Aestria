@@ -93,9 +93,9 @@ export default class Card {
         this.y = this.mesh.position.y
         this.z = this.mesh.position.z
 
-        this.hp_stat.position.set(this.x + (this.width / 2.3), this.y + 13, this.z + (this.height / 2.6))
-        this.atk_stat.position.set(this.x - (this.width / 2.3), this.y + 13, this.z + (this.height / 2.6))
-        this.mana_cost_stat.position.set(this.x + (this.width / 2.3), this.y + 13, this.z - (this.height / 2.6))
+        this.hp_stat.position.set(this.x + (this.width / 2.3), this.y + 14, this.z + (this.height / 2.6))
+        this.atk_stat.position.set(this.x - (this.width / 2.3), this.y + 14, this.z + (this.height / 2.6))
+        this.mana_cost_stat.position.set(this.x + (this.width / 2.3), this.y + 14, this.z - (this.height / 2.6))
     }
 
     set_position(x, y, z) {
@@ -120,13 +120,13 @@ export default class Card {
         this.atk_stat = this.dcText(`${this.atk}`, 30, 30, 50, 0xffffff, 0x000000, "atk")
         this.mana_cost_stat = this.dcText(`${this.mana_cost}`, 30, 30, 50, 0xffffff, 0x000000, "mana")
 
-        this.atk_stat.position.set(this.x - (this.width / 2.3), this.y + 12, this.z + (this.height / 2.6))
+        this.atk_stat.position.set(this.x - (this.width / 2.3), this.y + 14, this.z + (this.height / 2.6))
         this.atk_stat.rotation.x = ((Math.PI) / 180) * 270
 
-        this.hp_stat.position.set(this.x + (this.width / 2.3), this.y + 12, this.z + (this.height / 2.6))
+        this.hp_stat.position.set(this.x + (this.width / 2.3), this.y + 14, this.z + (this.height / 2.6))
         this.hp_stat.rotation.x = ((Math.PI) / 180) * 270
 
-        this.mana_cost_stat.position.set(this.x + (this.width / 2.3), this.y + 12, this.z - (this.height / 2.6))
+        this.mana_cost_stat.position.set(this.x + (this.width / 2.3), this.y + 14, this.z - (this.height / 2.6))
         this.mana_cost_stat.rotation.x = ((Math.PI) / 180) * 270
 
         this.object_group.add(this.hp_stat)
