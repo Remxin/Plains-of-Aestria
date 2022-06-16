@@ -1,1 +1,1 @@
-export const SOCKET_PORT = "http://localhost:3001"
+export const SOCKET_PORT = "https://plains-of-aestria.herokuapp.com:3001"
