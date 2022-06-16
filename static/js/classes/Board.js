@@ -765,7 +765,7 @@ export default class Board {
     }
 
     attack_animation(card, enemy_card) {
-        return new Promise((resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
             //position to go back after attack animation---------//|
             let card_x = card.mesh.position.x                    //|
             let card_z = card.mesh.position.z                    //|
