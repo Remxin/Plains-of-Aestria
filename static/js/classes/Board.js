@@ -550,7 +550,9 @@ export default class Board {
             } 
             
             //change that 
-            this.max_mana += 10
+            if(this.max_mana < 10){
+                this.max_mana += 1
+            }
             this.end_turn()
             this.space.socket.passTurn()
         })
