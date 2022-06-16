@@ -84,7 +84,7 @@ export class Search {
         this.informationContainer.appendChild(fightTimer)
 
 
-        let decrementer = 10
+        let decrementer = 6
         const countInterval = setInterval(() => {
             fightTimer.innerText = decrementer + ""
             decrementer--
@@ -94,7 +94,7 @@ export class Search {
             fightTimer.innerText = ""
             window.location.href = "/play"
             //TODO: set on 110000
-        }, 1000)
+        }, 6000)
     }
 
     showSearchingMenu = () => {
