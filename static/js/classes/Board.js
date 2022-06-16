@@ -968,7 +968,7 @@ export default class Board {
         else if (keyword == 'enraged') {
             if (current_card.keywords != null && current_card.keywords.includes('enraged')) {
                 if (socket_call) this.minions_attack(index, 'delete')
-                else this.minions_attack(index)
+                else this.minions_attack(index, "delete")
             }
         }
         //draws one card
