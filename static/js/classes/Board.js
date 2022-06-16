@@ -679,8 +679,7 @@ export default class Board {
         enemy_card.hp = enemy_card.hp - card.atk
         if (executed) enemy_card.hp = 0
 
-        //bloodthirst keyword
-        await this.invoke_keywords('bloodthirst', null, card)
+
         //console.log(enemy_card.hp, card.hp)
 
         return await this.attack_animation(card, enemy_card)
@@ -811,6 +810,8 @@ export default class Board {
                                     card.set_position(card.x, card.y, card.z)
                                 })
                                 .onComplete(() => {
+                                    //bloodthirst keyword
+                                    await this.invoke_keywords('bloodthirst', null, enemy_card)
                                     enemy_card.create_stat_display()
                                     enemy_card.update_position()
                                     enemy_card.set_position(enemy_card.x, enemy_card.y, enemy_card.z)
