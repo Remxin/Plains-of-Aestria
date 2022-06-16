@@ -37,9 +37,9 @@ export default class Space {
         this.context_menu_display_card_info()
     }
 
-    light_scene(){
-        const ambientLight = new THREE.AmbientLight( 0xffffff, 3 );
-        this.scene.add( ambientLight );
+    light_scene() {
+        const ambientLight = new THREE.AmbientLight(0xffffff, 3);
+        this.scene.add(ambientLight);
     }
 
     //B and T buttons
@@ -54,7 +54,7 @@ export default class Space {
             else if (e.code == "KeyB" && _this.view == 'battlefield') {
                 _this.default_view()
             }
-            else if (e.code == "KeyH" && _this.view == 'hero'){
+            else if (e.code == "KeyH" && _this.view == 'hero') {
                 _this.default_view()
             }
             else if (e.code == "KeyT") {
@@ -98,10 +98,10 @@ export default class Space {
     }
 
     hero_view() {
-        let x = window.innerWidth/2.2
-        let z = window.innerHeight/1.7
+        let x = window.innerWidth / 2.2
+        let z = window.innerHeight / 1.7
 
-        this.camera.position.set(x+300, 700, z+400)
+        this.camera.position.set(x + 300, 700, z + 400)
         this.camera.lookAt(this.scene.position)
 
         if (this.board.end_turn_button) this.board.end_turn_button.style.visibility = 'hidden'
@@ -161,7 +161,7 @@ export default class Space {
             this.description_display.innerText += `Mana cost: ${card.mana_cost}\n`
             this.description_display.innerText += `Hp: ${card.hp}\n`
             this.description_display.innerText += `Atk: ${card.atk}\n`
-            if(card.keywords)this.description_display.innerText += `Keywords: ${card.keywords}\n\n`
+            if (card.keywords) this.description_display.innerText += `Keywords: ${card.keywords}\n\n`
             else this.description_display.innerText += `\n`
             this.description_display.innerText += `${card.description}\n`
         }
@@ -247,16 +247,16 @@ export default class Space {
             for (let grid_placeholder of this.player_grid) {
                 if (intersects[0].object.position.x == grid_placeholder.position.x && intersects[0].object.position.z == grid_placeholder.position.z) {
                     if (this.board.cards_on_grid[index] == null) {
-                        if(this.board.starting_player == true && !(this.board.turn_count % 2 == 1)){
+                        if (this.board.starting_player == true && !(this.board.turn_count % 2 == 1)) {
                             alert('wait for your turn!')
                             return
                         }
-                        else if(this.board.starting_player == false && !(this.board.turn_count % 2 == 0)){
+                        else if (this.board.starting_player == false && !(this.board.turn_count % 2 == 0)) {
                             alert('wait for your turn')
                             return
                         }
 
-                        if (this.board.mana_available - chosen_card.mana_cost < 0){
+                        if (this.board.mana_available - chosen_card.mana_cost < 0) {
                             alert('not enough mana!')
                             return
                         }
@@ -273,7 +273,7 @@ export default class Space {
 
                         //animate and move card to the grid
                         chosen_card.object_group.position.y = 5
-                        let num = index 
+                        let num = index
                         new TWEEN.Tween(chosen_card.mesh.position)
                             .to({
                                 x: grid_placeholder.position.x,
@@ -288,12 +288,14 @@ export default class Space {
                             .onComplete(() => {
                                 console.log(chosen_card._id)
                                 //index relative to enemy_client
-                                let grid_index = ((num > 20) ? num - 21 : ((num <=20 && num > 13) ? num - 7 : null))
+                                let grid_index = ((num > 20) ? num - 21 : ((num <= 20 && num > 13) ? num - 7 : null))
                                 console.log(grid_index, num)
 
                                 //update mana_available for player
                                 this.board.mana_available -= chosen_card.mana_cost
                                 this.board.update_mana()
+
+                                this.board.cards_on_grid[num] = chosen_card
 
                                 //enraged and sage keywords
                                 this.board.invoke_keywords('enraged', num, chosen_card)
