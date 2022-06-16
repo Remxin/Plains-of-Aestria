@@ -33,4 +33,17 @@ const getAllCards = async (req, res) => {
 
 }
 
-module.exports = { sendGameFile, getAllCards }
+const showWinMenu = async (req, res) => {
+    const { jwt } = req.cookies
+    const user = await userHelpers.verifyUser(jwt)
+    // console.log(user)
+    if (user.err) {
+        return res.redirect("/login")
+    }
+
+    return res.sendFile(path.resolve("static/pages/win.html"))
+
+}
+
+
+module.exports = { sendGameFile, getAllCards, showWinMenu }
