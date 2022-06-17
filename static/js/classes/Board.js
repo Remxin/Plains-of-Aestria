@@ -981,7 +981,7 @@ export default class Board {
         //basically life steal
         else if (keyword == 'bloodthirst') {
             if (current_card.keywords != null && current_card.keywords.includes('bloodthirst')) {
-                if (current_card.hp > 0) current_card.hp += 2
+                current_card.hp += 2
             }
         }
 
