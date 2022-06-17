@@ -809,7 +809,7 @@ export default class Board {
                                     card.update_position()
                                     card.set_position(card.x, card.y, card.z)
                                 })
-                                .onComplete(() => {
+                                .onComplete(async () => {
                                     //bloodthirst keyword
                                     await this.invoke_keywords('bloodthirst', null, enemy_card)
                                     enemy_card.create_stat_display()
