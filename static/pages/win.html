@@ -11,7 +11,7 @@
 
 <body>
     <div id="container">
-        <h1 id="is-win">You </h1>
+        <h1 id="is-win">You</h1>
 
         <button class="button">
             <a href="/">Return to menu</a>
@@ -19,14 +19,16 @@
     </div>
 
     <script>
-        const isWin = document.getElementById("is-win")
-        const wonInfo = JSON.parse(sessionStorage.getItem("isWin")) // true or false
+
 
         document.onload = () => {
+            const isWin = document.getElementById("is-win")
+            const wonInfo = JSON.parse(sessionStorage.getItem("isWin")) // true or false
+            // console.log(wonInfo)
             if (wonInfo) {
-                isWin.innerText += "won!"
+                isWin.innerText += " won!"
             } else {
-                isWin.innerText += "lost!"
+                isWin.innerText += " lost!"
             }
         }
 
