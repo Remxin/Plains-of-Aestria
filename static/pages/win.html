@@ -19,18 +19,16 @@
     </div>
 
     <script>
-
-
-        window.onload = () => {
-            const isWin = document.getElementById("is-win")
-            const wonInfo = JSON.parse(sessionStorage.getItem("isWin")) // true or false
-            // console.log(wonInfo)
-            if (wonInfo) {
-                isWin.innerText += " won!"
-            } else {
-                isWin.innerText += " lost!"
-            }
+        const isWin = document.getElementById("is-win")
+        const wonInfo = JSON.parse(sessionStorage.getItem("isWin")) // true or false
+        // console.log(wonInfo)
+        if (wonInfo) {
+            isWin.innerText += " won!"
+        } else {
+            isWin.innerText += " lost!"
         }
+
+
 
     </script>
 </body>
