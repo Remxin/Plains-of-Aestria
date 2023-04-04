@@ -1,0 +1,23 @@
+@keyframes moveBgc {
+  0% {
+    background-position-x: left; }
+  50% {
+    background-position-x: right; }
+  100% {
+    background-position-x: left; } }
+
+@keyframes stretchBackground {
+  from {
+    width: 10%;
+    height: 10%; }
+  to {
+    width: 100%;
+    height: 100%; } }
+
+@keyframes showFrom0Opacity {
+  from {
+    display: block;
+    opacity: 0; }
+  to {
+    display: block;
+    opacity: 1; } }

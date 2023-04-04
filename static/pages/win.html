@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="styles/css/win.css">
+</head>
+
+<body>
+    <div id="container">
+        <h1 id="is-win">You </h1>
+
+        <button class="button">
+            <a href="/">Return to menu</a>
+        </button>
+    </div>
+
+    <script>
+        const isWin = document.getElementById("is-win")
+        const wonInfo = JSON.parse(sessionStorage.getItem("isWin")) // true or false
+
+        document.onload = () => {
+            if (wonInfo) {
+                isWin.innerText += "won!"
+            } else {
+                isWin.innerText += "lost!"
+            }
+        }
+
+    </script>
+</body>
+
+</html>

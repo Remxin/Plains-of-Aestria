@@ -1,0 +1,312 @@
+@import './style.scss';
+@import "./animations.scss";
+@import "./variables.scss";
+
+
+
+#main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+    background: url("/imgs/home-battle-field.webp");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position-x: right;
+    animation-name: moveBgc;
+    animation-duration: 40s;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+
+
+    .user-info {
+        display: flex;
+        justify-content: flex-start;
+        flex-direction: column;
+        align-items: center;
+        width: 75%;
+        height: 85%;
+        background: $menuBackground;
+        border-radius: 5%;
+
+        .game-title {
+            margin-top: 15px;
+            font-size: 42px;
+            background-clip: text;
+            text-align: center;
+            background: -webkit-linear-gradient(#bbb, #000);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .user {
+
+            .user-email {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+        }
+       
+    }
+
+    .choose-fraction-menu {
+        background: $menuBackground;
+        animation-name: stretchBackground;
+        animation-duration: .6s;
+        animation-fill-mode: forwards;
+        padding-left: 8px;
+        overflow-y: scroll;
+
+
+        & > * {
+            opacity: 0;
+            animation-name: showFrom0Opacity;
+            animation-delay: .6s;
+            animation-duration: .6s;
+            animation-fill-mode: forwards;
+        }
+
+        & > h3 {
+            margin-top: 15px;
+            font-size: 24px;
+            background-clip: text;
+            background: -webkit-linear-gradient(#000, #bbb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .fraction-container {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            width: 100%;
+            height: fit-content;
+            position: relative;
+
+
+            .fraction-card {
+                position: relative;
+                width: 300px;
+                height: 300px;
+                opacity: 0.8;
+                background-repeat: no-repeat !important;
+                background-size: cover !important;
+                background-position: center !important;
+                border-radius: 5%;
+                margin-right: 10px;
+                margin-bottom: 10px;
+                cursor: pointer;
+                // background-attachment: ;
+
+
+                &:hover {
+                    opacity: 1;
+                }
+
+                .info-container {
+                    display: flex;
+                    flex-direction: column;
+                    width: 100%;
+                    height: 60%;
+                    position: absolute;
+                    bottom: 0;
+                    background-color: rgba(240,255,240, 0.6);
+                    filter: blur();
+
+
+                    h3 {
+                        margin-top: 5px;
+                        font-size: 18px;
+                        background-clip: text;
+                        background: -webkit-linear-gradient(#f00, #000);
+                        -webkit-background-clip: text;
+                        -webkit-text-fill-color: transparent;
+                    }
+
+                    p {
+                        margin-bottom: 10px;
+                    }
+
+                    .lider-container {
+                        width: 100%;
+                        height: 50%;
+                        display: flex;
+                        flex-direction: row;
+                        img {
+                            width: 80px;
+                            height: 80px;
+                            margin-left: 5px;
+                            border-radius: 5%;
+                        }
+
+                        p {
+                            display: block;
+                            width: 80px;
+                            height: 80px;
+                        }
+
+                        .lider-name {
+                            padding-left: 5px;
+                            text-align: center;
+                            margin-top: 5px;
+                            font-size: 18px;
+                            background-clip: text;
+                            background: -webkit-linear-gradient(#f00, #00d);
+                            -webkit-background-clip: text;
+                            -webkit-text-fill-color: transparent;
+                        }
+
+                        .lider-lifes {
+                            color: purple;
+                            font-weight: bold;
+                            padding-top: 8px;
+                            padding-left: 13px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+    .search-game-menu {
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        // align-items: center;
+        justify-content: center;
+        background: $menuBackground;
+        animation-name: stretchBackground;
+        animation-duration: .6s;
+        animation-fill-mode: forwards;
+        padding-left: 8px;
+        overflow-y: scroll;
+
+        & > * {
+            opacity: 0;
+            animation-name: showFrom0Opacity;
+            animation-delay: .6s;
+            animation-duration: .6s;
+            animation-fill-mode: forwards;
+        }
+
+        h3 {
+            position: absolute;
+            width: 100%;
+            top: 50px;
+            text-align: center;
+            font-size: 40px;
+        }
+
+        .back-button {
+            margin-top: 100px;
+        }
+    }
+
+    .create-game-menu {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background-color: $strongMenuBackground;
+        position: absolute;
+        width: 100%;
+        height: 100vh;
+        z-index: 3;
+
+        .button {
+            left: 0;
+        }
+    }
+
+    .private-games-menu {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        z-index: 3;
+        background-color: $strongMenuBackground;
+
+        .button {
+            margin-top: 20px;
+            left: 0;
+        }
+
+        table {
+
+
+            tr, td, th {
+                border: 2px solid #8f8;
+            }
+            th {
+                background-color: #fff !important;
+                font-size: 20px;
+                background-clip: text;
+                background: -webkit-linear-gradient(#000, #f00);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                font-weight: bold;
+                width: 200px;
+            }
+            td {
+                font-size: 14px;
+                width: 200px;
+            }
+        }
+    }
+
+    .join-password-menu {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        z-index: 4;
+        background-color: $strongMenuBackground;
+
+        input {
+            margin-bottom: 20px;
+        }
+
+        .button {
+            left: 0;
+            margin-bottom: 1px;
+        }
+    }
+}
+
+
+
+
+.button {
+    position: relative;
+    left: calc(50% - 60px);
+    width: 120px;
+    height: 35px;
+    background-color: #63d471;
+    background-image: linear-gradient(315deg, #63d471 0%, #233329 74%);
+    border: none;
+    border-radius: 5px;
+    color: whitesmoke;
+    cursor: pointer;
+    opacity: 0.75;
+    transition: .5s all;
+
+    &:disabled {
+        opacity: 0.2 !important;
+    }
+
+    &:hover:enabled {
+        opacity: 1;
+    }
+}
+

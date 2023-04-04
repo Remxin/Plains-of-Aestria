@@ -1,0 +1,249 @@
+* {
+  padding: 0px;
+  margin: 0px;
+  box-sizing: border-box; }
+
+@keyframes moveBgc {
+  0% {
+    background-position-x: left; }
+  50% {
+    background-position-x: right; }
+  100% {
+    background-position-x: left; } }
+
+@keyframes stretchBackground {
+  from {
+    width: 10%;
+    height: 10%; }
+  to {
+    width: 100%;
+    height: 100%; } }
+
+@keyframes showFrom0Opacity {
+  from {
+    display: block;
+    opacity: 0; }
+  to {
+    display: block;
+    opacity: 1; } }
+
+#main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+  background: url("/imgs/home-battle-field.webp");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position-x: right;
+  animation-name: moveBgc;
+  animation-duration: 40s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite; }
+  #main .user-info {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    align-items: center;
+    width: 75%;
+    height: 85%;
+    background: rgba(240, 255, 240, 0.75);
+    border-radius: 5%; }
+    #main .user-info .game-title {
+      margin-top: 15px;
+      font-size: 42px;
+      background-clip: text;
+      text-align: center;
+      background: -webkit-linear-gradient(#bbb, #000);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent; }
+    #main .user-info .user .user-email {
+      display: flex;
+      align-items: center;
+      justify-content: center; }
+  #main .choose-fraction-menu {
+    background: rgba(240, 255, 240, 0.75);
+    animation-name: stretchBackground;
+    animation-duration: .6s;
+    animation-fill-mode: forwards;
+    padding-left: 8px;
+    overflow-y: scroll; }
+    #main .choose-fraction-menu > * {
+      opacity: 0;
+      animation-name: showFrom0Opacity;
+      animation-delay: .6s;
+      animation-duration: .6s;
+      animation-fill-mode: forwards; }
+    #main .choose-fraction-menu > h3 {
+      margin-top: 15px;
+      font-size: 24px;
+      background-clip: text;
+      background: -webkit-linear-gradient(#000, #bbb);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent; }
+    #main .choose-fraction-menu .fraction-container {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      width: 100%;
+      height: fit-content;
+      position: relative; }
+      #main .choose-fraction-menu .fraction-container .fraction-card {
+        position: relative;
+        width: 300px;
+        height: 300px;
+        opacity: 0.8;
+        background-repeat: no-repeat !important;
+        background-size: cover !important;
+        background-position: center !important;
+        border-radius: 5%;
+        margin-right: 10px;
+        margin-bottom: 10px;
+        cursor: pointer; }
+        #main .choose-fraction-menu .fraction-container .fraction-card:hover {
+          opacity: 1; }
+        #main .choose-fraction-menu .fraction-container .fraction-card .info-container {
+          display: flex;
+          flex-direction: column;
+          width: 100%;
+          height: 60%;
+          position: absolute;
+          bottom: 0;
+          background-color: rgba(240, 255, 240, 0.6);
+          filter: blur(); }
+          #main .choose-fraction-menu .fraction-container .fraction-card .info-container h3 {
+            margin-top: 5px;
+            font-size: 18px;
+            background-clip: text;
+            background: -webkit-linear-gradient(#f00, #000);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent; }
+          #main .choose-fraction-menu .fraction-container .fraction-card .info-container p {
+            margin-bottom: 10px; }
+          #main .choose-fraction-menu .fraction-container .fraction-card .info-container .lider-container {
+            width: 100%;
+            height: 50%;
+            display: flex;
+            flex-direction: row; }
+            #main .choose-fraction-menu .fraction-container .fraction-card .info-container .lider-container img {
+              width: 80px;
+              height: 80px;
+              margin-left: 5px;
+              border-radius: 5%; }
+            #main .choose-fraction-menu .fraction-container .fraction-card .info-container .lider-container p {
+              display: block;
+              width: 80px;
+              height: 80px; }
+            #main .choose-fraction-menu .fraction-container .fraction-card .info-container .lider-container .lider-name {
+              padding-left: 5px;
+              text-align: center;
+              margin-top: 5px;
+              font-size: 18px;
+              background-clip: text;
+              background: -webkit-linear-gradient(#f00, #00d);
+              -webkit-background-clip: text;
+              -webkit-text-fill-color: transparent; }
+            #main .choose-fraction-menu .fraction-container .fraction-card .info-container .lider-container .lider-lifes {
+              color: purple;
+              font-weight: bold;
+              padding-top: 8px;
+              padding-left: 13px; }
+  #main .search-game-menu {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    justify-content: center;
+    background: rgba(240, 255, 240, 0.75);
+    animation-name: stretchBackground;
+    animation-duration: .6s;
+    animation-fill-mode: forwards;
+    padding-left: 8px;
+    overflow-y: scroll; }
+    #main .search-game-menu > * {
+      opacity: 0;
+      animation-name: showFrom0Opacity;
+      animation-delay: .6s;
+      animation-duration: .6s;
+      animation-fill-mode: forwards; }
+    #main .search-game-menu h3 {
+      position: absolute;
+      width: 100%;
+      top: 50px;
+      text-align: center;
+      font-size: 40px; }
+    #main .search-game-menu .back-button {
+      margin-top: 100px; }
+  #main .create-game-menu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(240, 255, 240, 0.9);
+    position: absolute;
+    width: 100%;
+    height: 100vh;
+    z-index: 3; }
+    #main .create-game-menu .button {
+      left: 0; }
+  #main .private-games-menu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 3;
+    background-color: rgba(240, 255, 240, 0.9); }
+    #main .private-games-menu .button {
+      margin-top: 20px;
+      left: 0; }
+    #main .private-games-menu table tr, #main .private-games-menu table td, #main .private-games-menu table th {
+      border: 2px solid #8f8; }
+    #main .private-games-menu table th {
+      background-color: #fff !important;
+      font-size: 20px;
+      background-clip: text;
+      background: -webkit-linear-gradient(#000, #f00);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: bold;
+      width: 200px; }
+    #main .private-games-menu table td {
+      font-size: 14px;
+      width: 200px; }
+  #main .join-password-menu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 4;
+    background-color: rgba(240, 255, 240, 0.9); }
+    #main .join-password-menu input {
+      margin-bottom: 20px; }
+    #main .join-password-menu .button {
+      left: 0;
+      margin-bottom: 1px; }
+
+.button {
+  position: relative;
+  left: calc(50% - 60px);
+  width: 120px;
+  height: 35px;
+  background-color: #63d471;
+  background-image: linear-gradient(315deg, #63d471 0%, #233329 74%);
+  border: none;
+  border-radius: 5px;
+  color: whitesmoke;
+  cursor: pointer;
+  opacity: 0.75;
+  transition: .5s all; }
+  .button:disabled {
+    opacity: 0.2 !important; }
+  .button:hover:enabled {
+    opacity: 1; }

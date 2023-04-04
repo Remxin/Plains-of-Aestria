@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="/socket.io.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="/styles/css/home.css">
+</head>
+<body>
+    <div id="main">
+        <div class="user-info">
+            <h1 class="game-title">Plains of Aestria</h1>
+            <div class="user"></div>
+            <div class="deck"></div>
+            <div class="settings">
+                <h2>Settings</h2>
+                <ul>
+                    <li>How to play</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script type="module">
+        import {Home} from "/js/Home.js"
+        const home = new Home()
+    </script>
+</body>
+</html>
